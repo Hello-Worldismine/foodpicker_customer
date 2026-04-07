@@ -47,6 +47,7 @@ function FavoritesPage({ favoriteItems, onOpenAlertModal }) {
                             description: '상품 가격이 설정 금액 이하가 되면 알림을 보냅니다.',
                             label: '희망 가격',
                             placeholder: '예: 3000',
+                            itemName: item.name,
                           })
                         }
                       >
@@ -61,13 +62,25 @@ function FavoritesPage({ favoriteItems, onOpenAlertModal }) {
                             description: '설정한 할인율 이상이 되면 알림을 보냅니다.',
                             label: '희망 할인율(%)',
                             placeholder: '예: 50',
+                            itemName: item.name,
                           })
                         }
                       >
                         할인율 알림설정
                       </button>
 
-                      <button className="chip-button">
+                      <button
+                        className="chip-button"
+                        onClick={() =>
+                          onOpenAlertModal({
+                            title: '재고소진 임박 알림 설정',
+                            description: '재고가 얼마 남지 않았을 때 알림을 보냅니다.',
+                            label: '재고 기준',
+                            placeholder: '예: 2',
+                            itemName: item.name,
+                          })
+                        }
+                      >
                         재고소진 임박 알림 설정
                       </button>
                     </div>

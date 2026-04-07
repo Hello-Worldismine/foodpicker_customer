@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Bell, X } from 'lucide-react'
 import BottomNav from './components/common/BottomNav'
 import HomePage from './pages/HomePage'
 import MapPage from './pages/MapPage'
@@ -6,13 +7,30 @@ import FavoritesPage from './pages/FavoritesPage'
 import OrdersPage from './pages/OrdersPage'
 import MyPage from './pages/MyPage'
 import PaymentPage from './pages/PaymentPage'
-import { homePopularProducts, stores, favoriteItems, pickupOrders, myOrders } from './data/mockData'
+import {
+  homePopularProducts,
+  stores,
+  favoriteItems as initialFavoriteItems,
+  pickupOrders,
+  myOrders,
+} from './data/mockData'
 
 function App() {
   const [activeTab, setActiveTab] = useState('home')
   const [selectedPaymentItem, setSelectedPaymentItem] = useState(null)
   const [favoriteAlertModal, setFavoriteAlertModal] = useState(null)
   const [myPageOrderDetail, setMyPageOrderDetail] = useState(null)
+  const [favoriteItems, setFavoriteItems] = useState(initialFavoriteItems)
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      title: '할인 알림',
+      message: '딸기 생크림 케이크 조각이 3,900원으로 내려갔어요.',
+      time: '방금 전',
+      read: false,
+    },
+  ])
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false)
 
   const paymentProduct = useMemo(() => {
     return selectedPaymentItem || homePopularProducts[0]
@@ -23,6 +41,63 @@ function App() {
     setActiveTab('payment')
   }
 
+  const unreadCount = notifications.filter((item) => !item.read).length
+
+  const addNotification = (title, message) => {
+    const newItem = {
+      id: Date.now(),
+      title,
+      message,
+      time: '방금 전',
+      read: false,
+    }
+    setNotifications((prev) => [newItem, ...prev])
+  }
+
+  const toggleFavorite = (product) => {
+    const exists = favoriteItems.some((item) => item.name === product.name && item.store === product.store)
+
+    if (exists) {
+      setFavoriteItems((prev) =>
+        prev.filter((item) => !(item.name === product.name && item.store === product.store)),
+      )
+      addNotification('찜 해제', `${product.name} 상품이 관심 목록에서 제거되었어요.`)
+      return
+    }
+
+    const newFavorite = {
+      id: Date.now(),
+      name: product.name,
+      store: product.store,
+      price: product.currentPrice,
+      image: product.image,
+      address: product.address || '서울 마포구 서교동 11-2',
+      contact: product.contact || '02-000-0000',
+    }
+
+    setFavoriteItems((prev) => [newFavorite, ...prev])
+    addNotification('찜 완료', `${product.name} 상품을 관심 목록에 추가했어요.`)
+  }
+
+  const openAlertModal = (modalInfo) => {
+    setFavoriteAlertModal(modalInfo)
+  }
+
+  const saveAlertSetting = () => {
+    if (!favoriteAlertModal) return
+
+    addNotification(
+      favoriteAlertModal.title,
+      `${favoriteAlertModal.itemName} 상품의 ${favoriteAlertModal.title}이 저장되었어요.`,
+    )
+    setFavoriteAlertModal(null)
+  }
+
+  const openNotifications = () => {
+    setIsNotificationOpen(true)
+    setNotifications((prev) => prev.map((item) => ({ ...item, read: true })))
+  }
+
   const renderPage = () => {
     switch (activeTab) {
       case 'home':
@@ -30,6 +105,10 @@ function App() {
           <HomePage
             products={homePopularProducts}
             onReserve={openPaymentPage}
+            onToggleFavorite={toggleFavorite}
+            favoriteItems={favoriteItems}
+            onOpenNotifications={openNotifications}
+            unreadCount={unreadCount}
           />
         )
       case 'map':
@@ -43,7 +122,7 @@ function App() {
         return (
           <FavoritesPage
             favoriteItems={favoriteItems}
-            onOpenAlertModal={setFavoriteAlertModal}
+            onOpenAlertModal={openAlertModal}
           />
         )
       case 'orders':
@@ -101,10 +180,42 @@ function App() {
               </button>
               <button
                 className="primary-button"
-                onClick={() => setFavoriteAlertModal(null)}
+                onClick={saveAlertSetting}
               >
                 저장
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isNotificationOpen && (
+        <div className="overlay">
+          <div className="popup-card notification-popup">
+            <div className="popup-header-row">
+              <h3 className="popup-title">알림</h3>
+              <button className="icon-close" onClick={() => setIsNotificationOpen(false)}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="notification-list">
+              {notifications.length === 0 ? (
+                <p className="notification-empty">아직 도착한 알림이 없어요.</p>
+              ) : (
+                notifications.map((item) => (
+                  <div key={item.id} className="notification-item">
+                    <div className="notification-icon-wrap">
+                      <Bell size={16} />
+                    </div>
+                    <div className="notification-content">
+                      <strong>{item.title}</strong>
+                      <p>{item.message}</p>
+                      <span>{item.time}</span>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

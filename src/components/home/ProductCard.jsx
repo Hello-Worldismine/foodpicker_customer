@@ -1,9 +1,20 @@
+import { Heart } from 'lucide-react'
 import TrendChart from '../common/TrendChart'
 
-function ProductCard({ product, rank, onReserve }) {
+function ProductCard({ product, rank, onReserve, onToggleFavorite, isFavorite }) {
   return (
     <div className="product-card">
-      <div className="rank-badge">{rank}순위</div>
+      <div className="product-card-topline">
+        <div className="rank-badge">{rank}순위</div>
+
+        <button
+          className={`favorite-icon-button ${isFavorite ? 'active' : ''}`}
+          onClick={() => onToggleFavorite(product)}
+          aria-label="찜하기"
+        >
+          <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
+        </button>
+      </div>
 
       <div className="product-top-row">
         <img className="product-image" src={product.image} alt={product.name} />

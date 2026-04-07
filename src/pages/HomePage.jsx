@@ -2,10 +2,18 @@ import SectionCard from '../components/common/SectionCard'
 import ProductCard from '../components/home/ProductCard'
 import PopularTicker from '../components/home/PopularTicker'
 import CategoryGrid from '../components/home/CategoryGrid'
+import { Bell } from 'lucide-react'
 import { bannerTexts, categories, currentLocation } from '../data/mockData'
 import { useEffect, useState } from 'react'
 
-function HomePage({ products, onReserve }) {
+function HomePage({
+  products,
+  onReserve,
+  onToggleFavorite,
+  favoriteItems,
+  onOpenNotifications,
+  unreadCount,
+}) {
   const [bannerIndex, setBannerIndex] = useState(0)
 
   useEffect(() => {
@@ -18,7 +26,14 @@ function HomePage({ products, onReserve }) {
 
   return (
     <div className="page page-home">
-      <div className="location-bar">📍 현재 위치 · {currentLocation}</div>
+      <div className="home-topbar">
+        <div className="location-bar">📍 현재 위치 · {currentLocation}</div>
+
+        <button className="notification-button" onClick={onOpenNotifications}>
+          <Bell size={20} />
+          {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+        </button>
+      </div>
 
       <SectionCard className="banner-card">
         <div className="banner-content">
@@ -48,6 +63,10 @@ function HomePage({ products, onReserve }) {
             product={product}
             rank={index + 1}
             onReserve={onReserve}
+            onToggleFavorite={onToggleFavorite}
+            isFavorite={favoriteItems.some(
+              (item) => item.name === product.name && item.store === product.store,
+            )}
           />
         ))}
       </div>
