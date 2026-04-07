@@ -14,7 +14,7 @@ import {
   pickupOrders,
   myOrders,
 } from './data/mockData'
-
+import TrendChart from './components/common/TrendChart'
 
 function App() {
   const [selectedProductDetail, setSelectedProductDetail] = useState(null)
@@ -85,11 +85,9 @@ function App() {
     }
 
     const newFavorite = {
+      ...product,
       id: Date.now(),
-      name: product.name,
-      store: product.store,
       price: product.currentPrice,
-      image: product.image,
       address: product.address || '서울 마포구 서교동 11-2',
       contact: product.contact || '02-000-0000',
     }
@@ -189,15 +187,17 @@ function App() {
       case 'map':
         return <MapPage stores={stores} onPayNow={openPaymentPage} />
 
-      case 'favorites':
-        return (
-          <FavoritesPage
-            favoriteItems={favoriteItems}
-            onOpenAlertModal={openAlertModal}
-            alertSettings={alertSettings}
-            onCancelAlertSetting={cancelAlertSetting}
-          />
-        )
+        case 'favorites':
+          return (
+            <FavoritesPage
+              favoriteItems={favoriteItems}
+              onOpenAlertModal={openAlertModal}
+              alertSettings={alertSettings}
+              onCancelAlertSetting={cancelAlertSetting}
+              onOpenDetail={setSelectedProductDetail}
+              onReserve={openPaymentPage}
+            />
+          )
 
       case 'orders':
         return <OrdersPage pickupOrders={pickupOrders} />
@@ -322,30 +322,39 @@ function App() {
         <p>{selectedProductDetail.description}</p>
       </div>
 
-      <div className="product-detail-grid">
-        <div className="detail-info-card">
-          <span className="detail-label">카테고리</span>
-          <strong>{selectedProductDetail.category}</strong>
-        </div>
-        <div className="detail-info-card">
-          <span className="detail-label">수량</span>
-          <strong>{selectedProductDetail.quantity}개</strong>
-        </div>
-        <div className="detail-info-card">
-          <span className="detail-label">시작가</span>
-          <strong>{selectedProductDetail.startPrice.toLocaleString()}원</strong>
-        </div>
-        <div className="detail-info-card">
-          <span className="detail-label">최저가</span>
-          <strong>{selectedProductDetail.minimumPrice.toLocaleString()}원</strong>
-        </div>
-        <div className="detail-info-card">
-          <span className="detail-label">현재가</span>
-          <strong>{selectedProductDetail.currentPrice.toLocaleString()}원</strong>
-        </div>
-        <div className="detail-info-card">
-          <span className="detail-label">가격 인하 간격</span>
-          <strong>{selectedProductDetail.priceDropInterval}</strong>
+      <div className="product-detail-summary-card">
+  <div className="detail-price-row">
+    <span className="detail-current-price">
+      {selectedProductDetail.currentPrice.toLocaleString()}원
+    </span>
+    <span className="detail-original-price">
+      {selectedProductDetail.originalPrice.toLocaleString()}원
+    </span>
+  </div>
+
+  <div className="detail-price-meta">
+    <span>하락률 {selectedProductDetail.discountRate}%</span>
+    <span>시작가 {selectedProductDetail.startPrice.toLocaleString()}원</span>
+    <span>하락폭 {selectedProductDetail.dropAmount.toLocaleString()}원</span>
+  </div>
+
+  <div className="detail-basic-info">
+    <div className="detail-basic-info-item">
+      <span className="detail-label">카테고리</span>
+      <strong>{selectedProductDetail.category}</strong>
+    </div>
+
+    <div className="detail-basic-info-item">
+      <span className="detail-label">수량</span>
+      <strong>{selectedProductDetail.quantity}개</strong>
+    </div>
+  </div>
+</div>
+
+      <div className="product-detail-section">
+        <h5>가격 변동 이력</h5>
+        <div className="detail-trend-chart-box">
+          <TrendChart data={selectedProductDetail.trend} />
         </div>
       </div>
 
@@ -358,23 +367,17 @@ function App() {
           <p><strong>픽업 가능 시간</strong> {selectedProductDetail.pickupTime}</p>
           <p><strong>상품 안내</strong> {selectedProductDetail.expirationNote}</p>
         </div>
-      </div>
 
-      <div className="product-detail-section">
-        <h5>가격 변동 이력</h5>
-        <div className="detail-price-history">
-          {selectedProductDetail.trend.map((item) => (
-            <div key={`${item.time}-${item.price}`} className="detail-price-history-row">
-              <span>{item.time}</span>
-              <strong>{item.price.toLocaleString()}원</strong>
-            </div>
-          ))}
+        <div className="store-map-box">
+          <div className="store-map-title">매장 위치</div>
+          <div className="mini-map">
+            📍 {selectedProductDetail.store} 지도 영역
+          </div>
         </div>
       </div>
     </div>
   </div>
 )}
-
       {myPageOrderDetail && (
         <div className="overlay">
           <div className="popup-card detail-popup">

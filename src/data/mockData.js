@@ -190,22 +190,14 @@ export const categories = [
   
   export const favoriteItems = [
     {
-      id: 1,
-      name: '딸기 생크림 케이크 조각',
-      store: '달콤 베이커리 상수점',
-      price: 3900,
-      image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=800&auto=format&fit=crop',
-      address: '서울 마포구 상수동 00-1',
-      contact: '02-123-4567',
+      ...homePopularProducts[0],
+      id: 1001,
+      price: homePopularProducts[0].currentPrice,
     },
     {
-      id: 2,
-      name: '과일 샐러드 컵',
-      store: '굿마트 홍대점',
-      price: 2800,
-      image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=800&auto=format&fit=crop',
-      address: '서울 마포구 서교동 11-2',
-      contact: '02-987-6543',
+      ...homePopularProducts[1],
+      id: 1002,
+      price: homePopularProducts[1].currentPrice,
     },
   ]
   

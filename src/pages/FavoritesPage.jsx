@@ -9,6 +9,8 @@ function FavoritesPage({
   onOpenAlertModal,
   alertSettings,
   onCancelAlertSetting,
+  onOpenDetail,
+  onReserve,
 }) {
   const [openId, setOpenId] = useState(null)
 
@@ -36,6 +38,21 @@ function FavoritesPage({
                     <strong>{item.price.toLocaleString()}원</strong>
                   </div>
                 </div>
+
+                <div className="favorite-card-actions">
+  <button
+    className="ghost-outline-button favorite-action-button"
+    onClick={() => onOpenDetail(item)}
+  >
+    상세보기
+  </button>
+  <button
+    className="primary-button favorite-action-button"
+    onClick={() => onReserve(item)}
+  >
+    예약하기
+  </button>
+</div>
 
                 {openId === item.id && (
                   <div className="accordion-box">

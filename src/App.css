@@ -277,12 +277,13 @@
 .pickup-action-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .pickup-time {
+  flex: 1;
   font-size: 13px;
   color: var(--text-sub);
   line-height: 1.4;
@@ -536,6 +537,18 @@
 .favorite-main p {
   margin: 0 0 8px;
   color: var(--text-sub);
+}
+
+.favorite-action-button {
+  min-width: 74px;
+  height: 34px;
+  padding: 0 10px;
+  font-size: 12px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .accordion-box {
@@ -862,6 +875,23 @@
   .order-table-row {
     font-size: 12px;
   }
+
+  .detail-price-flow {
+    align-items: flex-start;
+  }
+  
+  .price-flow-current {
+    font-size: 16px;
+  }
+
+  .favorite-card-actions {
+    justify-content: stretch;
+  }
+
+  .favorite-card-actions .ghost-outline-button,
+  .favorite-card-actions .primary-button {
+    flex: 1;
+  }
 }
 
 
@@ -911,6 +941,17 @@
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 12px;
+}
+
+.product-card-action-button {
+  height: 38px;
+  padding: 0 12px;
+  font-size: 13px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .favorite-icon-button {
@@ -1068,6 +1109,9 @@
   display: flex;
   gap: 8px;
   flex-shrink: 0;
+  margin-left: auto;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .ghost-outline-button {
@@ -1170,12 +1214,12 @@
 
 @media (max-width: 390px) {
   .product-action-buttons {
-    width: 100%;
+    width: auto;
   }
-
+  
   .product-action-buttons .ghost-outline-button,
   .product-action-buttons .primary-button {
-    flex: 1;
+    flex: initial;
   }
 
   .product-detail-grid {
@@ -1185,4 +1229,85 @@
   .product-detail-gallery {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+.product-detail-summary-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.detail-price-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.detail-current-price {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1.2;
+}
+
+.detail-original-price {
+  font-size: 14px;
+  color: #9ca3af;
+  text-decoration: line-through;
+}
+
+.detail-price-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 14px;
+}
+
+.detail-basic-info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.detail-basic-info-item {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fafafa;
+  padding: 12px;
+}
+
+.detail-basic-info-item strong {
+  font-size: 15px;
+  color: var(--text-main);
+}
+
+.detail-trend-chart-box {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  padding: 10px;
+}
+
+.store-map-box {
+  margin-top: 14px;
+}
+
+.store-map-title {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.favorite-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
 }

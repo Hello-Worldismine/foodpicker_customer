@@ -49,16 +49,19 @@ function ProductCard({
         <span className="pickup-time">픽업 가능 시간 {product.pickupTime}</span>
 
         <div className="product-action-buttons">
-          <button
-            className="ghost-outline-button"
-            onClick={() => onOpenDetail(product)}
-          >
-            상세보기
-          </button>
-          <button className="primary-button" onClick={() => onReserve(product)}>
-            예약하기
-          </button>
-        </div>
+  <button
+    className="ghost-outline-button product-card-action-button"
+    onClick={() => onOpenDetail(product)}
+  >
+    상세보기
+  </button>
+  <button
+    className="primary-button product-card-action-button"
+    onClick={() => onReserve(product)}
+  >
+    예약하기
+  </button>
+</div>
       </div>
     </div>
   )
