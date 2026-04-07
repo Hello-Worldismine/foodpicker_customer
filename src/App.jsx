@@ -19,8 +19,10 @@ function App() {
   const [activeTab, setActiveTab] = useState('home')
   const [selectedPaymentItem, setSelectedPaymentItem] = useState(null)
   const [favoriteAlertModal, setFavoriteAlertModal] = useState(null)
+  const [alertInputValue, setAlertInputValue] = useState('')
   const [myPageOrderDetail, setMyPageOrderDetail] = useState(null)
   const [favoriteItems, setFavoriteItems] = useState(initialFavoriteItems)
+  const [alertSettings, setAlertSettings] = useState({})
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -36,11 +38,6 @@ function App() {
     return selectedPaymentItem || homePopularProducts[0]
   }, [selectedPaymentItem])
 
-  const openPaymentPage = (product) => {
-    setSelectedPaymentItem(product)
-    setActiveTab('payment')
-  }
-
   const unreadCount = notifications.filter((item) => !item.read).length
 
   const addNotification = (title, message) => {
@@ -54,13 +51,33 @@ function App() {
     setNotifications((prev) => [newItem, ...prev])
   }
 
+  const openPaymentPage = (product) => {
+    setSelectedPaymentItem(product)
+    setActiveTab('payment')
+  }
+
   const toggleFavorite = (product) => {
-    const exists = favoriteItems.some((item) => item.name === product.name && item.store === product.store)
+    const exists = favoriteItems.some(
+      (item) => item.name === product.name && item.store === product.store,
+    )
 
     if (exists) {
+      const removedItem = favoriteItems.find(
+        (item) => item.name === product.name && item.store === product.store,
+      )
+
       setFavoriteItems((prev) =>
         prev.filter((item) => !(item.name === product.name && item.store === product.store)),
       )
+
+      if (removedItem) {
+        setAlertSettings((prev) => {
+          const next = { ...prev }
+          delete next[removedItem.id]
+          return next
+        })
+      }
+
       addNotification('찜 해제', `${product.name} 상품이 관심 목록에서 제거되었어요.`)
       return
     }
@@ -80,17 +97,71 @@ function App() {
   }
 
   const openAlertModal = (modalInfo) => {
+    const currentValue =
+      alertSettings[modalInfo.itemId]?.[modalInfo.settingType]?.value ?? ''
+
     setFavoriteAlertModal(modalInfo)
+    setAlertInputValue(String(currentValue))
+  }
+
+  const closeAlertModal = () => {
+    setFavoriteAlertModal(null)
+    setAlertInputValue('')
   }
 
   const saveAlertSetting = () => {
-    if (!favoriteAlertModal) return
+    if (!favoriteAlertModal || !alertInputValue.trim()) return
+
+    const numericValue = Number(alertInputValue)
+
+    if (Number.isNaN(numericValue) || numericValue <= 0) return
+
+    setAlertSettings((prev) => ({
+      ...prev,
+      [favoriteAlertModal.itemId]: {
+        ...prev[favoriteAlertModal.itemId],
+        [favoriteAlertModal.settingType]: {
+          value: numericValue,
+          label:
+            favoriteAlertModal.settingType === 'targetPrice'
+              ? `${numericValue.toLocaleString()}원 이하 알림`
+              : `재고 ${numericValue}개 이하 알림`,
+        },
+      },
+    }))
 
     addNotification(
       favoriteAlertModal.title,
       `${favoriteAlertModal.itemName} 상품의 ${favoriteAlertModal.title}이 저장되었어요.`,
     )
-    setFavoriteAlertModal(null)
+
+    closeAlertModal()
+  }
+
+  const cancelAlertSetting = (itemId, settingType, itemName) => {
+    setAlertSettings((prev) => {
+      const itemSettings = prev[itemId]
+      if (!itemSettings) return prev
+
+      const nextItemSettings = { ...itemSettings }
+      delete nextItemSettings[settingType]
+
+      const next = { ...prev }
+      if (Object.keys(nextItemSettings).length === 0) {
+        delete next[itemId]
+      } else {
+        next[itemId] = nextItemSettings
+      }
+
+      return next
+    })
+
+    addNotification(
+      '알림 설정 취소',
+      `${itemName} 상품의 ${
+        settingType === 'targetPrice' ? '지정가 알림' : '재고소진 임박 알림'
+      }이 취소되었어요.`,
+    )
   }
 
   const openNotifications = () => {
@@ -111,22 +182,23 @@ function App() {
             unreadCount={unreadCount}
           />
         )
+
       case 'map':
-        return (
-          <MapPage
-            stores={stores}
-            onPayNow={openPaymentPage}
-          />
-        )
+        return <MapPage stores={stores} onPayNow={openPaymentPage} />
+
       case 'favorites':
         return (
           <FavoritesPage
             favoriteItems={favoriteItems}
             onOpenAlertModal={openAlertModal}
+            alertSettings={alertSettings}
+            onCancelAlertSetting={cancelAlertSetting}
           />
         )
+
       case 'orders':
         return <OrdersPage pickupOrders={pickupOrders} />
+
       case 'mypage':
         return (
           <MyPage
@@ -134,6 +206,7 @@ function App() {
             onOpenOrderDetail={setMyPageOrderDetail}
           />
         )
+
       case 'payment':
         return (
           <PaymentPage
@@ -141,6 +214,7 @@ function App() {
             onBack={() => setActiveTab('home')}
           />
         )
+
       default:
         return null
     }
@@ -168,20 +242,16 @@ function App() {
                 className="text-input"
                 type="number"
                 placeholder={favoriteAlertModal.placeholder}
+                value={alertInputValue}
+                onChange={(e) => setAlertInputValue(e.target.value)}
               />
             </div>
 
             <div className="popup-actions">
-              <button
-                className="ghost-button"
-                onClick={() => setFavoriteAlertModal(null)}
-              >
+              <button className="ghost-button" onClick={closeAlertModal}>
                 취소
               </button>
-              <button
-                className="primary-button"
-                onClick={saveAlertSetting}
-              >
+              <button className="primary-button" onClick={saveAlertSetting}>
                 저장
               </button>
             </div>
