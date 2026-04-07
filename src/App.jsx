@@ -15,7 +15,9 @@ import {
   myOrders,
 } from './data/mockData'
 
+
 function App() {
+  const [selectedProductDetail, setSelectedProductDetail] = useState(null)
   const [activeTab, setActiveTab] = useState('home')
   const [selectedPaymentItem, setSelectedPaymentItem] = useState(null)
   const [favoriteAlertModal, setFavoriteAlertModal] = useState(null)
@@ -172,16 +174,17 @@ function App() {
   const renderPage = () => {
     switch (activeTab) {
       case 'home':
-        return (
-          <HomePage
-            products={homePopularProducts}
-            onReserve={openPaymentPage}
-            onToggleFavorite={toggleFavorite}
-            favoriteItems={favoriteItems}
-            onOpenNotifications={openNotifications}
-            unreadCount={unreadCount}
-          />
-        )
+  return (
+    <HomePage
+      products={homePopularProducts}
+      onReserve={openPaymentPage}
+      onToggleFavorite={toggleFavorite}
+      favoriteItems={favoriteItems}
+      onOpenNotifications={openNotifications}
+      unreadCount={unreadCount}
+      onOpenProductDetail={setSelectedProductDetail}
+    />
+  )
 
       case 'map':
         return <MapPage stores={stores} onPayNow={openPaymentPage} />
@@ -290,6 +293,87 @@ function App() {
           </div>
         </div>
       )}
+
+{selectedProductDetail && (
+  <div className="overlay">
+    <div className="popup-card detail-popup product-detail-popup">
+      <div className="popup-header-row">
+        <h3 className="popup-title">상품 상세보기</h3>
+        <button
+          className="icon-close"
+          onClick={() => setSelectedProductDetail(null)}
+        >
+          ✕
+        </button>
+      </div>
+
+      <div className="product-detail-gallery">
+        {selectedProductDetail.gallery?.map((image, index) => (
+          <img
+            key={`${selectedProductDetail.id}-${index}`}
+            src={image}
+            alt={`${selectedProductDetail.name} ${index + 1}`}
+          />
+        ))}
+      </div>
+
+      <div className="product-detail-section">
+        <h4>{selectedProductDetail.name}</h4>
+        <p>{selectedProductDetail.description}</p>
+      </div>
+
+      <div className="product-detail-grid">
+        <div className="detail-info-card">
+          <span className="detail-label">카테고리</span>
+          <strong>{selectedProductDetail.category}</strong>
+        </div>
+        <div className="detail-info-card">
+          <span className="detail-label">수량</span>
+          <strong>{selectedProductDetail.quantity}개</strong>
+        </div>
+        <div className="detail-info-card">
+          <span className="detail-label">시작가</span>
+          <strong>{selectedProductDetail.startPrice.toLocaleString()}원</strong>
+        </div>
+        <div className="detail-info-card">
+          <span className="detail-label">최저가</span>
+          <strong>{selectedProductDetail.minimumPrice.toLocaleString()}원</strong>
+        </div>
+        <div className="detail-info-card">
+          <span className="detail-label">현재가</span>
+          <strong>{selectedProductDetail.currentPrice.toLocaleString()}원</strong>
+        </div>
+        <div className="detail-info-card">
+          <span className="detail-label">가격 인하 간격</span>
+          <strong>{selectedProductDetail.priceDropInterval}</strong>
+        </div>
+      </div>
+
+      <div className="product-detail-section">
+        <h5>판매자 등록 정보</h5>
+        <div className="detail-list">
+          <p><strong>매장명</strong> {selectedProductDetail.store}</p>
+          <p><strong>주소</strong> {selectedProductDetail.address}</p>
+          <p><strong>연락처</strong> {selectedProductDetail.contact}</p>
+          <p><strong>픽업 가능 시간</strong> {selectedProductDetail.pickupTime}</p>
+          <p><strong>상품 안내</strong> {selectedProductDetail.expirationNote}</p>
+        </div>
+      </div>
+
+      <div className="product-detail-section">
+        <h5>가격 변동 이력</h5>
+        <div className="detail-price-history">
+          {selectedProductDetail.trend.map((item) => (
+            <div key={`${item.time}-${item.price}`} className="detail-price-history-row">
+              <span>{item.time}</span>
+              <strong>{item.price.toLocaleString()}원</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
       {myPageOrderDetail && (
         <div className="overlay">

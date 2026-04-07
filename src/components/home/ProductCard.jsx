@@ -1,7 +1,14 @@
 import { Heart } from 'lucide-react'
 import TrendChart from '../common/TrendChart'
 
-function ProductCard({ product, rank, onReserve, onToggleFavorite, isFavorite }) {
+function ProductCard({
+  product,
+  rank,
+  onReserve,
+  onToggleFavorite,
+  onOpenDetail,
+  isFavorite,
+}) {
   return (
     <div className="product-card">
       <div className="product-card-topline">
@@ -40,9 +47,18 @@ function ProductCard({ product, rank, onReserve, onToggleFavorite, isFavorite })
 
       <div className="pickup-action-row">
         <span className="pickup-time">픽업 가능 시간 {product.pickupTime}</span>
-        <button className="primary-button" onClick={() => onReserve(product)}>
-          예약하기
-        </button>
+
+        <div className="product-action-buttons">
+          <button
+            className="ghost-outline-button"
+            onClick={() => onOpenDetail(product)}
+          >
+            상세보기
+          </button>
+          <button className="primary-button" onClick={() => onReserve(product)}>
+            예약하기
+          </button>
+        </div>
       </div>
     </div>
   )

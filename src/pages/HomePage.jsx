@@ -13,6 +13,7 @@ function HomePage({
   favoriteItems,
   onOpenNotifications,
   unreadCount,
+  onOpenProductDetail,
 }) {
   const [bannerIndex, setBannerIndex] = useState(0)
 
@@ -64,6 +65,7 @@ function HomePage({
             rank={index + 1}
             onReserve={onReserve}
             onToggleFavorite={onToggleFavorite}
+            onOpenDetail={onOpenProductDetail}
             isFavorite={favoriteItems.some(
               (item) => item.name === product.name && item.store === product.store,
             )}
