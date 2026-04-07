@@ -43,18 +43,18 @@ export const homePopularProducts = [
     },
   ]
   
-  export const categories = [
-    { id: 1, name: '빵/디저트', icon: '🧁' },
-    { id: 2, name: '반찬가게', icon: '🥗' },
-    { id: 3, name: '마트', icon: '🛒' },
-    { id: 4, name: '전통시장', icon: '🏪' },
-    { id: 5, name: '야채가게', icon: '🥬' },
-    { id: 6, name: '육류/어류', icon: '🥩' },
-    { id: 7, name: '식당', icon: '🍱' },
-    { id: 8, name: '편의점', icon: '🏬' },
-    { id: 9, name: '70%할인상품(마감임박)', icon: '🔥' },
-    { id: 10, name: '초긴급(마감30분전)', icon: '⏰' },
-  ]
+export const categories = [
+  { id: 1, name: '빵/디저트', icon: '🥐' },
+  { id: 2, name: '반찬가게', icon: '🥗' },
+  { id: 3, name: '마트', icon: '🛍' },
+  { id: 4, name: '전통시장', icon: '🏬' },
+  { id: 5, name: '야채가게', icon: '🥦' },
+  { id: 6, name: '육류/어류', icon: '🍖' },
+  { id: 7, name: '식당', icon: '🍽' },
+  { id: 8, name: '편의점', icon: '🏪' },
+  { id: 9, name: '70%할인상품(마감임박)', icon: '⚡' },
+  { id: 10, name: '초긴급(마감30분전)', icon: '⏰' },
+]
   
   export const stores = [
     {
