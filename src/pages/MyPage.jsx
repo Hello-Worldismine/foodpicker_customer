@@ -42,7 +42,7 @@ function MyPage({ orders, onOpenOrderDetail }) {
           <p>010-1234-5678</p>
           <div className="mypage-member-badge">
             <BadgeCheck size={14} />
-            <span>Gold Member</span>
+            <span>골드 등급</span>
           </div>
         </div>
       </div>

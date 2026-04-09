@@ -92,14 +92,30 @@ function MapPage({ stores, onPayNow }) {
 
       {selectedStore && (
         <SectionCard>
-          <div className="store-summary">
-            <h3>{selectedStore.name}</h3>
-            <p>
-              최고 할인 상품 : {selectedStore.topProduct}{' '}
-              {selectedStore.bestDiscount > 0 ? `(${selectedStore.bestDiscount}%)` : ''}
-            </p>
-            <p>잔여 수량 : {selectedStore.stockCount}개</p>
-          </div>
+          <div className="store-summary-card">
+  <div className="store-summary-top">
+    <div className="store-summary-title-wrap">
+      <span className="store-summary-label">선택한 가게</span>
+      <h3>{selectedStore.name}</h3>
+      <p>{selectedStore.region}</p>
+    </div>
+
+    <div className={`store-stock-badge ${selectedStore.stockCount <= 2 ? 'low' : ''}`}>
+      잔여 {selectedStore.stockCount}개
+    </div>
+  </div>
+
+  <div className="store-summary-highlight">
+    <div className="store-summary-highlight-item">
+      <span className="store-summary-mini-label">최고 할인 상품</span>
+      <strong>{selectedStore.topProduct}</strong>
+    </div>
+
+    <div className="store-summary-discount-chip">
+      {selectedStore.bestDiscount > 0 ? `${selectedStore.bestDiscount}% 할인` : '할인 정보 없음'}
+    </div>
+  </div>
+</div>
 
           <div className="store-item-table">
             <div className="store-item-head">

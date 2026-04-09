@@ -236,18 +236,19 @@ function App() {
       case 'map':
         return <MapPage stores={stores} onPayNow={openPaymentPage} />
 
-      case 'favorites':
-        return (
-          <FavoritesPage
-            favoriteItems={favoriteItems}
-            onOpenAlertModal={openAlertModal}
-            alertSettings={alertSettings}
-            onCancelAlertSetting={cancelAlertSetting}
-            onOpenDetail={(product) => setSelectedProductDetail(enrichProductWithStore(product))}
-            onReserve={openPaymentPage}
-            onOpenStore={openStorePage}
-          />
-        )
+        case 'favorites':
+          return (
+            <FavoritesPage
+              favoriteItems={favoriteItems}
+              onOpenAlertModal={openAlertModal}
+              alertSettings={alertSettings}
+              onCancelAlertSetting={cancelAlertSetting}
+              onOpenDetail={(product) => setSelectedProductDetail(enrichProductWithStore(product))}
+              onReserve={openPaymentPage}
+              onOpenStore={openStorePage}
+              onToggleFavorite={toggleFavorite}
+            />
+          )
 
       case 'orders':
         return <OrdersPage pickupOrders={pickupOrders} />
