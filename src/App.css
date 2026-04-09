@@ -1,11 +1,26 @@
 :root {
-  --bg: #ffffff;
-  --line: rgb(226, 226, 230);
-  --primary: rgb(58, 111, 234);
-  --text-main: #111827;
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-soft: #f1f4fb;
+  --surface-muted: #eef2f7;
+  --line: #e5e9f2;
+  --line-strong: #d8dfeb;
+
+  --primary: #3867d6;
+  --primary-soft: #edf3ff;
+  --primary-strong: #234fc2;
+
+  --text-main: #1f2937;
   --text-sub: #6b7280;
-  --danger: #ef4444;
-  --shadow: 0 6px 20px rgba(17, 24, 39, 0.06);
+  --text-muted: #94a3b8;
+
+  --danger: #e74c3c;
+  --danger-soft: #fff1f0;
+
+  --success: #16a34a;
+  --success-soft: #ecfdf3;
+
+  --shadow: 0 10px 30px rgba(31, 41, 55, 0.06);
 }
 
 .app-shell {
@@ -39,9 +54,9 @@
 }
 
 .section-card {
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 15px;
+  border-radius: 18px;
   box-shadow: var(--shadow);
   padding: 16px;
   margin-bottom: 14px;
@@ -49,7 +64,8 @@
 
 .banner-card {
   min-height: 148px;
-  background: linear-gradient(135deg, #eef4ff 0%, #ffffff 100%);
+  background: linear-gradient(135deg, #edf3ff 0%, #f8fbff 55%, #f4f7ff 100%);
+  border-color: #dfe7fb;
 }
 
 .banner-content {
@@ -85,18 +101,18 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #fff;
-  border: 1px solid var(--line);
+  background: #ffffff;
+  border: 1px solid #e0e9fb;
   border-radius: 14px;
   padding: 12px 14px;
-  box-shadow: var(--shadow);
+  box-shadow: none;
   margin-bottom: 14px;
 }
 
 .ticker-badge {
   flex-shrink: 0;
-  color: var(--primary);
-  font-weight: 700;
+  color: #e14000;
+  font-weight: 800;
   font-size: 13px;
 }
 
@@ -133,39 +149,47 @@
 .category-item {
   width: 100%;
   min-width: 0;
-  background: #ffffff;
+  min-height: 82px;
+  padding: 14px 14px;
   border: 1px solid var(--line);
-  border-radius: 14px;
-  min-height: 72px;
-  padding: 12px 14px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(17, 24, 39, 0.04);
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
   gap: 12px;
   text-align: left;
-  box-shadow: 0 4px 12px rgba(17, 24, 39, 0.04);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 }
 
-.category-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
+.category-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(17, 24, 39, 0.08);
+  border-color: rgba(58, 111, 234, 0.18);
+}
+
+.category-icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
   background: rgba(58, 111, 234, 0.1);
   color: var(--primary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 18px;
-  font-weight: 700;
+}
+
+.category-icon-svg {
+  width: 20px;
+  height: 20px;
 }
 
 .category-name {
   min-width: 0;
   font-size: 13px;
-  line-height: 1.35;
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1.4;
   color: var(--text-main);
   word-break: keep-all;
   overflow-wrap: break-word;
@@ -178,22 +202,28 @@
 }
 
 .product-card {
-  background: #fff;
+  background: linear-gradient(180deg, #ffffff 0%, #fcfcfe 100%);
   border: 1px solid var(--line);
-  border-radius: 15px;
+  border-radius: 18px;
   box-shadow: var(--shadow);
   padding: 16px;
 }
 
 .rank-badge {
   display: inline-flex;
-  background: rgba(58, 111, 234, 0.1);
+  background: var(--primary-soft);
   color: var(--primary);
-  font-weight: 700;
+  font-weight: 800;
   font-size: 12px;
   padding: 6px 10px;
   border-radius: 999px;
   margin-bottom: 12px;
+}
+
+.product-store,
+.price-meta,
+.pickup-time {
+  color: var(--text-sub);
 }
 
 .product-top-row {
@@ -1008,7 +1038,8 @@
 }
 
 .payment-summary-card {
-  background: #f3f4f8;
+  background: linear-gradient(180deg, #f4f6fb 0%, #eef2f8 100%);
+  border: 1px solid #e3e8f1;
   border-radius: 24px;
   padding: 24px 20px;
   margin-bottom: 20px;
@@ -1263,7 +1294,7 @@
   padding: 12px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fafafa;
+  background: #f8fbff;
 }
 
 .notification-icon-wrap {
@@ -1810,7 +1841,7 @@
 .mypage-summary-card {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background: #f3f4f6;
+  background: #eef2f7;
   border-radius: 20px;
   padding: 6px;
   margin-bottom: 26px;
@@ -1968,15 +1999,15 @@
   width: 100%;
   min-height: 48px;
   border-radius: 999px;
-  background: #000;
-  color: #fff;
+  background: #ffdcdc;
+  color: #ab0000;
   font-size: 15px;
   font-weight: 800;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0 18px;
-  box-shadow: 0 12px 22px rgba(58, 111, 234, 0.2);
+  box-shadow: 0 12px 22px rgba(255, 255, 255, 0.2);
 }
 
 .mypage-pickedup-info {
@@ -2005,7 +2036,7 @@
   width: 100%;
   height: 48px;
   border-radius: 999px;
-  background: #3d7eff;
+  background: #626262;
   color: #ffffff;
   font-size: 15px;
   font-weight: 800;

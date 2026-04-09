@@ -7,16 +7,16 @@ export const bannerTexts = [
 ]
 
 export const categories = [
-  { id: 1, name: '빵/디저트', icon: '🥐' },
-  { id: 2, name: '반찬가게', icon: '🥗' },
-  { id: 3, name: '마트', icon: '🛍' },
-  { id: 4, name: '전통시장', icon: '🏬' },
-  { id: 5, name: '야채가게', icon: '🥦' },
-  { id: 6, name: '육류/어류', icon: '🍖' },
-  { id: 7, name: '식당', icon: '🍽' },
-  { id: 8, name: '편의점', icon: '🏪' },
-  { id: 9, name: '70%할인상품(마감임박)', icon: '⚡' },
-  { id: 10, name: '초긴급(마감30분전)', icon: '⏰' },
+  { id: 1, name: '빵/디저트', icon: 'cookie' },
+  { id: 2, name: '반찬가게', icon: 'salad' },
+  { id: 3, name: '마트', icon: 'shoppingCart' },
+  { id: 4, name: '전통시장', icon: 'store' },
+  { id: 5, name: '야채가게', icon: 'carrot' },
+  { id: 6, name: '육류/어류', icon: 'fish' },
+  { id: 7, name: '식당', icon: 'utensils' },
+  { id: 8, name: '편의점', icon: 'package' },
+  { id: 9, name: '70%할인상품(마감임박)', icon: 'badgePercent' },
+  { id: 10, name: '초긴급(마감30분전)', icon: 'clock3' },
 ]
   
 export const stores = [
