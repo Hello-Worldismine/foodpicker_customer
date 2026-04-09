@@ -121,7 +121,7 @@ function MapPage({ stores, onPayNow }) {
             <div className="store-item-head">
               <span>상품</span>
               <span>현재가</span>
-              <span>결제</span>
+              <span>예약하기</span>
             </div>
 
             {selectedStoreItems.length === 0 ? (
@@ -138,7 +138,7 @@ function MapPage({ stores, onPayNow }) {
                     className="small-primary-button"
                     onClick={() => onPayNow(item)}
                   >
-                    결제
+                    예약
                   </button>
                 </div>
               ))

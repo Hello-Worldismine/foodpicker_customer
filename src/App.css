@@ -26,7 +26,7 @@
 .app-shell {
   display: flex;
   justify-content: center;
-  padding: 24px 12px;
+  padding: 10px 12px;
 }
 
 .mobile-app {
@@ -1538,7 +1538,38 @@
 }
 
 .favorite-pickup-row {
-  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.favorite-pickup-row .pickup-time {
+  flex: initial;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+
+.favorite-pickup-row .product-action-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.favorite-pickup-row .favorite-action-button {
+  height: 36px;
+  padding: 0 12px;
+  font-size: 12px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .alert-toggle-button {
