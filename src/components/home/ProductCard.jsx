@@ -12,22 +12,25 @@ function ProductCard({
   compactRank = false,
 }) {
   return (
-    <div className="product-card">
-      <div className="product-card-topline">
-        <div className={`rank-badge ${compactRank ? 'compact' : ''}`}>{rank}순위</div>
+    <div className="product-card product-card-top-image">
+      <div className="product-card-image-wrap">
+        <img className="product-card-cover-image" src={product.image} alt={product.name} />
 
-        <button
-          className={`favorite-icon-button ${isFavorite ? 'active' : ''}`}
-          onClick={() => onToggleFavorite(product)}
-          aria-label="찜하기"
-        >
-          <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
-          <span className="favorite-count">{product.favoriteCount ?? 0}</span>
-        </button>
+        <div className="product-card-image-overlay">
+          <div className={`rank-badge ${compactRank ? 'compact' : ''}`}>{rank}순위</div>
+
+          <button
+            className={`favorite-icon-button ${isFavorite ? 'active' : ''}`}
+            onClick={() => onToggleFavorite(product)}
+            aria-label="찜하기"
+          >
+            <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
+            <span className="favorite-count">{product.favoriteCount ?? 0}</span>
+          </button>
+        </div>
       </div>
 
-      <div className="product-top-row">
-        <img className="product-image" src={product.image} alt={product.name} />
+      <div className="product-card-body">
         <div className="product-info">
           <p className="product-category">{product.category}</p>
           <h3 className="product-name">{product.name}</h3>
@@ -50,26 +53,26 @@ function ProductCard({
             <span>하락폭 {product.dropAmount.toLocaleString()}원</span>
           </div>
         </div>
-      </div>
 
-      <TrendChart data={product.trend} />
+        <TrendChart data={product.trend} />
 
-      <div className="pickup-action-row">
-        <span className="pickup-time">픽업 가능 시간 {product.pickupTime}</span>
+        <div className="pickup-action-row">
+          <span className="pickup-time">픽업 가능 시간 {product.pickupTime}</span>
 
-        <div className="product-action-buttons">
-          <button
-            className="ghost-outline-button product-card-action-button"
-            onClick={() => onOpenDetail(product)}
-          >
-            상세보기
-          </button>
-          <button
-            className="primary-button product-card-action-button"
-            onClick={() => onReserve(product)}
-          >
-            예약하기
-          </button>
+          <div className="product-action-buttons">
+            <button
+              className="ghost-outline-button product-card-action-button"
+              onClick={() => onOpenDetail(product)}
+            >
+              상세보기
+            </button>
+            <button
+              className="primary-button product-card-action-button"
+              onClick={() => onReserve(product)}
+            >
+              예약하기
+            </button>
+          </div>
         </div>
       </div>
     </div>
