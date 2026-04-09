@@ -2,7 +2,7 @@ import SectionCard from '../components/common/SectionCard'
 import ProductCard from '../components/home/ProductCard'
 import PopularTicker from '../components/home/PopularTicker'
 import CategoryGrid from '../components/home/CategoryGrid'
-import { Bell } from 'lucide-react'
+import { Bell, Search } from 'lucide-react'
 import { bannerTexts, categories, currentLocation } from '../data/mockData'
 import { useEffect, useState } from 'react'
 
@@ -14,8 +14,10 @@ function HomePage({
   onOpenNotifications,
   unreadCount,
   onOpenProductDetail,
+  onOpenStore,
 }) {
   const [bannerIndex, setBannerIndex] = useState(0)
+  const [searchKeyword, setSearchKeyword] = useState('')
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -25,6 +27,11 @@ function HomePage({
     return () => clearInterval(timer)
   }, [])
 
+  const handleSearch = () => {
+    if (!searchKeyword.trim()) return
+    onOpenStore(searchKeyword.trim())
+  }
+
   return (
     <div className="page page-home">
       <div className="home-topbar">
@@ -33,6 +40,21 @@ function HomePage({
         <button className="notification-button" onClick={onOpenNotifications}>
           <Bell size={20} />
           {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+        </button>
+      </div>
+
+      <div className="home-search-bar">
+        <input
+          className="text-input"
+          placeholder="가게 이름을 검색해보세요"
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSearch()
+          }}
+        />
+        <button className="search-button" onClick={handleSearch}>
+          <Search size={18} />
         </button>
       </div>
 
@@ -66,8 +88,9 @@ function HomePage({
             onReserve={onReserve}
             onToggleFavorite={onToggleFavorite}
             onOpenDetail={onOpenProductDetail}
+            onOpenStore={onOpenStore}
             isFavorite={favoriteItems.some(
-              (item) => item.name === product.name && item.store === product.store,
+              (item) => item.name === product.name && item.storeId === product.storeId,
             )}
           />
         ))}

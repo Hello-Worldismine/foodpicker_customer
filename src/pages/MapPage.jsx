@@ -1,18 +1,23 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import PageHeader from '../components/common/PageHeader'
 import SectionCard from '../components/common/SectionCard'
 import MockMap from '../components/map/MockMap'
+import { homePopularProducts } from '../data/mockData'
 
 function MapPage({ stores, onPayNow }) {
   const [search, setSearch] = useState('')
   const [filter70, setFilter70] = useState(false)
   const [filterPickup, setFilterPickup] = useState(false)
-  const [selectedStore, setSelectedStore] = useState(stores[0])
+  const [selectedStore, setSelectedStore] = useState(stores[0] ?? null)
 
   const filteredStores = useMemo(() => {
     return stores.filter((store) => {
+      const keyword = search.trim().toLowerCase()
+
       const matchesSearch =
-        store.name.includes(search) || store.region.includes(search)
+        keyword === '' ||
+        store.name.toLowerCase().includes(keyword) ||
+        store.region.toLowerCase().includes(keyword)
 
       const matches70 = filter70 ? store.highlight70 : true
       const matchesPickup = filterPickup ? store.pickupNow : true
@@ -20,6 +25,34 @@ function MapPage({ stores, onPayNow }) {
       return matchesSearch && matches70 && matchesPickup
     })
   }, [stores, search, filter70, filterPickup])
+
+  useEffect(() => {
+    if (!selectedStore && filteredStores.length > 0) {
+      setSelectedStore(filteredStores[0])
+      return
+    }
+
+    if (
+      selectedStore &&
+      !filteredStores.some((store) => store.id === selectedStore.id)
+    ) {
+      setSelectedStore(filteredStores[0] ?? null)
+    }
+  }, [filteredStores, selectedStore])
+
+  const selectedStoreItems = useMemo(() => {
+    if (!selectedStore) return []
+
+    return homePopularProducts
+      .filter((product) => product.storeId === selectedStore.id)
+      .map((product) => ({
+        ...product,
+        price: product.currentPrice,
+        store: selectedStore.name,
+        address: selectedStore.address,
+        contact: selectedStore.contact,
+      }))
+  }, [selectedStore])
 
   return (
     <div className="page">
@@ -61,7 +94,10 @@ function MapPage({ stores, onPayNow }) {
         <SectionCard>
           <div className="store-summary">
             <h3>{selectedStore.name}</h3>
-            <p>최고 할인 상품 : {selectedStore.topProduct} ({selectedStore.bestDiscount}%)</p>
+            <p>
+              최고 할인 상품 : {selectedStore.topProduct}{' '}
+              {selectedStore.bestDiscount > 0 ? `(${selectedStore.bestDiscount}%)` : ''}
+            </p>
             <p>잔여 수량 : {selectedStore.stockCount}개</p>
           </div>
 
@@ -72,27 +108,25 @@ function MapPage({ stores, onPayNow }) {
               <span>결제</span>
             </div>
 
-            {selectedStore.items.map((item) => (
-              <div key={item.id} className="store-item-row">
-                <div className="store-item-product">
-                  <img src={item.image} alt={item.name} />
-                  <span>{item.name}</span>
+            {selectedStoreItems.length === 0 ? (
+              <div className="store-empty-row">현재 판매중인 상품이 없습니다.</div>
+            ) : (
+              selectedStoreItems.map((item) => (
+                <div key={item.id} className="store-item-row">
+                  <div className="store-item-product">
+                    <img src={item.image} alt={item.name} />
+                    <span>{item.name}</span>
+                  </div>
+                  <span>{item.currentPrice.toLocaleString()}원</span>
+                  <button
+                    className="small-primary-button"
+                    onClick={() => onPayNow(item)}
+                  >
+                    결제
+                  </button>
                 </div>
-                <span>{item.price.toLocaleString()}원</span>
-                <button
-                  className="small-primary-button"
-                  onClick={() =>
-                    onPayNow({
-                      ...item,
-                      store: selectedStore.name,
-                      currentPrice: item.price,
-                    })
-                  }
-                >
-                  결제
-                </button>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </SectionCard>
       )}

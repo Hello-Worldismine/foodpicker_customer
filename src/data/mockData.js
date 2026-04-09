@@ -1,6 +1,91 @@
-export const homePopularProducts = [
+export const currentLocation = '서교동'
+
+export const bannerTexts = [
+  '마감임박 상품 최대 70% 할인',
+  '지금 예약하고 퇴근길에 바로 픽업',
+  '폐기 줄이고 할인은 크게, 푸드피커',
+]
+
+export const categories = [
+  { id: 1, name: '빵/디저트', icon: '🥐' },
+  { id: 2, name: '반찬가게', icon: '🥗' },
+  { id: 3, name: '마트', icon: '🛍' },
+  { id: 4, name: '전통시장', icon: '🏬' },
+  { id: 5, name: '야채가게', icon: '🥦' },
+  { id: 6, name: '육류/어류', icon: '🍖' },
+  { id: 7, name: '식당', icon: '🍽' },
+  { id: 8, name: '편의점', icon: '🏪' },
+  { id: 9, name: '70%할인상품(마감임박)', icon: '⚡' },
+  { id: 10, name: '초긴급(마감30분전)', icon: '⏰' },
+]
+  
+export const stores = [
   {
     id: 1,
+    name: '달콤 베이커리 상수점',
+    region: '상수동',
+    address: '서울 마포구 상수동 00-1',
+    contact: '02-123-4567',
+    description: '당일 생산한 베이커리와 디저트를 합리적인 가격에 판매합니다.',
+    x: '62%',
+    y: '24%',
+    stockCount: 2,
+    highlight70: false,
+    pickupNow: true,
+    bestDiscount: 56,
+    topProduct: '딸기 생크림 케이크 조각',
+  },
+  {
+    id: 2,
+    name: '굿마트 홍대점',
+    region: '서교동',
+    address: '서울 마포구 서교동 11-2',
+    contact: '02-987-6543',
+    description: '신선식품과 간편식을 중심으로 마감 임박 상품을 할인 판매합니다.',
+    x: '28%',
+    y: '32%',
+    stockCount: 8,
+    highlight70: true,
+    pickupNow: true,
+    bestDiscount: 70,
+    topProduct: '과일 샐러드 컵',
+  },
+  {
+    id: 3,
+    name: '오늘한끼 연남점',
+    region: '연남동',
+    address: '서울 마포구 연남동 20-4',
+    contact: '02-555-1234',
+    description: '매일 조리한 식사 메뉴를 마감 전에 할인 판매합니다.',
+    x: '70%',
+    y: '68%',
+    stockCount: 12,
+    highlight70: true,
+    pickupNow: false,
+    bestDiscount: 59,
+    topProduct: '수제 돈까스 도시락',
+  },
+  {
+    id: 4,
+    name: '싱싱야채 망원점',
+    region: '망원동',
+    address: '서울 마포구 망원동 31-1',
+    contact: '02-321-7777',
+    description: '오늘 수확한 채소와 과일을 판매하는 동네 채소가게입니다.',
+    x: '52%',
+    y: '58%',
+    stockCount: 0,
+    highlight70: false,
+    pickupNow: false,
+    bestDiscount: 0,
+    topProduct: '-',
+  },
+]
+
+export const homePopularProducts = [
+  {
+    id: 101,
+    storeId: 1,
     category: '빵/디저트',
     name: '딸기 생크림 케이크 조각',
     image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=800&auto=format&fit=crop',
@@ -16,10 +101,10 @@ export const homePopularProducts = [
     discountRate: 56,
     dropAmount: 5000,
     quantity: 3,
-    priceDropInterval: '20분마다 500원 인하',
     pickupTime: '오늘 18:30 ~ 20:00',
     expirationNote: '오늘 마감 전 판매 상품',
     description: '부드러운 시트와 생딸기가 올라간 조각 케이크입니다.',
+    favoriteCount: 28,
     trend: [
       { time: '15:00', price: 7900 },
       { time: '15:20', price: 7400 },
@@ -28,12 +113,10 @@ export const homePopularProducts = [
       { time: '16:20', price: 4900 },
       { time: '16:40', price: 3900 },
     ],
-    store: '달콤 베이커리 상수점',
-    address: '서울 마포구 상수동 00-1',
-    contact: '02-123-4567',
   },
   {
-    id: 2,
+    id: 102,
+    storeId: 2,
     category: '마트',
     name: '과일 샐러드 컵',
     image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=800&auto=format&fit=crop',
@@ -49,10 +132,10 @@ export const homePopularProducts = [
     discountRate: 57,
     dropAmount: 3700,
     quantity: 8,
-    priceDropInterval: '15분마다 600원 인하',
     pickupTime: '오늘 19:00 ~ 21:00',
     expirationNote: '당일 제조, 당일 픽업 권장',
     description: '제철 과일이 담긴 샐러드 컵으로 가볍게 즐기기 좋아요.',
+    favoriteCount: 96,
     trend: [
       { time: '14:30', price: 5500 },
       { time: '14:45', price: 5200 },
@@ -61,12 +144,10 @@ export const homePopularProducts = [
       { time: '15:30', price: 3400 },
       { time: '15:45', price: 2800 },
     ],
-    store: '굿마트 홍대점',
-    address: '서울 마포구 서교동 11-2',
-    contact: '02-987-6543',
   },
   {
-    id: 3,
+    id: 103,
+    storeId: 3,
     category: '식당',
     name: '수제 돈까스 도시락',
     image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=800&auto=format&fit=crop',
@@ -82,10 +163,10 @@ export const homePopularProducts = [
     discountRate: 59,
     dropAmount: 7100,
     quantity: 2,
-    priceDropInterval: '25분마다 1000원 인하',
     pickupTime: '오늘 17:40 ~ 19:10',
     expirationNote: '마감 전 픽업 전용 상품',
     description: '직접 튀긴 돈까스와 밥, 반찬이 포함된 도시락입니다.',
+    favoriteCount: 74,
     trend: [
       { time: '13:30', price: 9900 },
       { time: '13:55', price: 9400 },
@@ -94,163 +175,65 @@ export const homePopularProducts = [
       { time: '15:10', price: 6200 },
       { time: '15:35', price: 4900 },
     ],
+  },
+]
+
+export const favoriteItems = [
+  {
+    ...homePopularProducts[0],
+    id: 1001,
+    price: homePopularProducts[0].currentPrice,
+  },
+  {
+    ...homePopularProducts[1],
+    id: 1002,
+    price: homePopularProducts[1].currentPrice,
+  },
+]
+
+export const pickupOrders = [
+  {
+    id: 1,
+    name: '과일 샐러드 컵',
+    quantity: 2,
+    store: '굿마트 홍대점',
+    code: 'FP-2108',
+    address: '서울 마포구 서교동 11-2',
+    contact: '02-987-6543',
+  },
+  {
+    id: 2,
+    name: '수제 돈까스 도시락',
+    quantity: 1,
     store: '오늘한끼 연남점',
+    code: 'FP-7321',
     address: '서울 마포구 연남동 20-4',
     contact: '02-555-1234',
   },
 ]
-  
-export const categories = [
-  { id: 1, name: '빵/디저트', icon: '🥐' },
-  { id: 2, name: '반찬가게', icon: '🥗' },
-  { id: 3, name: '마트', icon: '🛍' },
-  { id: 4, name: '전통시장', icon: '🏬' },
-  { id: 5, name: '야채가게', icon: '🥦' },
-  { id: 6, name: '육류/어류', icon: '🍖' },
-  { id: 7, name: '식당', icon: '🍽' },
-  { id: 8, name: '편의점', icon: '🏪' },
-  { id: 9, name: '70%할인상품(마감임박)', icon: '⚡' },
-  { id: 10, name: '초긴급(마감30분전)', icon: '⏰' },
+
+export const myOrders = [
+  {
+    id: 1,
+    orderNumber: '2026-0407-001',
+    orderDate: '2026.04.07 14:25',
+    name: '과일 샐러드 컵',
+    store: '굿마트 홍대점',
+    address: '서울 마포구 서교동 11-2',
+    image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=800&auto=format&fit=crop',
+    price: 2800,
+    status: '픽업대기',
+  },
+  {
+    id: 2,
+    orderNumber: '2026-0406-003',
+    orderDate: '2026.04.06 18:40',
+    name: '딸기 생크림 케이크 조각',
+    store: '달콤 베이커리 상수점',
+    address: '서울 마포구 상수동 00-1',
+    image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=800&auto=format&fit=crop',
+    price: 3900,
+    status: '픽업 완료',
+    pickedUpAt: '2026.04.06 19:12',
+  },
 ]
-  
-  export const stores = [
-    {
-      id: 1,
-      name: '굿마트 홍대점',
-      region: '서교동',
-      x: '28%',
-      y: '32%',
-      stockCount: 8,
-      highlight70: true,
-      pickupNow: true,
-      bestDiscount: 70,
-      topProduct: '과일 샐러드 컵',
-      items: [
-        {
-          id: 101,
-          name: '과일 샐러드 컵',
-          image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=800&auto=format&fit=crop',
-          price: 2800,
-        },
-        {
-          id: 102,
-          name: '훈제 닭가슴살 샐러드',
-          image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=800&auto=format&fit=crop',
-          price: 3200,
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: '달콤 베이커리 상수점',
-      region: '상수동',
-      x: '62%',
-      y: '24%',
-      stockCount: 2,
-      highlight70: false,
-      pickupNow: true,
-      bestDiscount: 56,
-      topProduct: '딸기 생크림 케이크 조각',
-      items: [
-        {
-          id: 103,
-          name: '딸기 생크림 케이크 조각',
-          image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=800&auto=format&fit=crop',
-          price: 3900,
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: '오늘한끼 연남점',
-      region: '연남동',
-      x: '70%',
-      y: '68%',
-      stockCount: 12,
-      highlight70: true,
-      pickupNow: false,
-      bestDiscount: 59,
-      topProduct: '수제 돈까스 도시락',
-      items: [
-        {
-          id: 104,
-          name: '수제 돈까스 도시락',
-          image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=800&auto=format&fit=crop',
-          price: 4900,
-        },
-        {
-          id: 105,
-          name: '치킨마요 덮밥',
-          image: 'https://images.unsplash.com/photo-1604908176997-4317c6a7d2d8?q=80&w=800&auto=format&fit=crop',
-          price: 4500,
-        },
-      ],
-    },
-  ]
-  
-  export const favoriteItems = [
-    {
-      ...homePopularProducts[0],
-      id: 1001,
-      price: homePopularProducts[0].currentPrice,
-    },
-    {
-      ...homePopularProducts[1],
-      id: 1002,
-      price: homePopularProducts[1].currentPrice,
-    },
-  ]
-  
-  export const pickupOrders = [
-    {
-      id: 1,
-      name: '과일 샐러드 컵',
-      quantity: 2,
-      store: '굿마트 홍대점',
-      code: 'FP-2108',
-      address: '서울 마포구 서교동 11-2',
-      contact: '02-987-6543',
-    },
-    {
-      id: 2,
-      name: '수제 돈까스 도시락',
-      quantity: 1,
-      store: '오늘한끼 연남점',
-      code: 'FP-7321',
-      address: '서울 마포구 연남동 20-4',
-      contact: '02-555-1234',
-    },
-  ]
-  
-  export const myOrders = [
-    {
-      id: 1,
-      orderNumber: '2026-0407-001',
-      orderDate: '2026.04.07 14:25',
-      name: '과일 샐러드 컵',
-      store: '굿마트 홍대점',
-      address: '서울 마포구 서교동 11-2',
-      image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=800&auto=format&fit=crop',
-      price: 2800,
-      status: '픽업대기',
-    },
-    {
-      id: 2,
-      orderNumber: '2026-0406-003',
-      orderDate: '2026.04.06 18:40',
-      name: '딸기 생크림 케이크 조각',
-      store: '달콤 베이커리 상수점',
-      address: '서울 마포구 상수동 00-1',
-      image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=800&auto=format&fit=crop',
-      price: 3900,
-      status: '픽업 완료',
-      pickedUpAt: '2026.04.06 19:12',
-    },
-  ]
-  
-  export const currentLocation = '서교동'
-  export const bannerTexts = [
-    '마감임박 상품 최대 70% 할인',
-    '지금 예약하고 퇴근길에 바로 픽업',
-    '폐기 줄이고 할인은 크게, 푸드피커',
-  ]

@@ -11,6 +11,7 @@ function FavoritesPage({
   onCancelAlertSetting,
   onOpenDetail,
   onReserve,
+  onOpenStore,
 }) {
   const [openId, setOpenId] = useState(null)
 
@@ -34,25 +35,33 @@ function FavoritesPage({
                   <img src={item.image} alt={item.name} />
                   <div className="favorite-main">
                     <h3>{item.name}</h3>
-                    <p>{item.store}</p>
+                    <button
+                      className="store-link-button favorite-store-link"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onOpenStore(item.storeId ?? item.store)
+                      }}
+                    >
+                      {item.store}
+                    </button>
                     <strong>{item.price.toLocaleString()}원</strong>
                   </div>
                 </div>
 
                 <div className="favorite-card-actions">
-  <button
-    className="ghost-outline-button favorite-action-button"
-    onClick={() => onOpenDetail(item)}
-  >
-    상세보기
-  </button>
-  <button
-    className="primary-button favorite-action-button"
-    onClick={() => onReserve(item)}
-  >
-    예약하기
-  </button>
-</div>
+                  <button
+                    className="ghost-outline-button favorite-action-button"
+                    onClick={() => onOpenDetail(item)}
+                  >
+                    상세보기
+                  </button>
+                  <button
+                    className="primary-button favorite-action-button"
+                    onClick={() => onReserve(item)}
+                  >
+                    예약하기
+                  </button>
+                </div>
 
                 {openId === item.id && (
                   <div className="accordion-box">

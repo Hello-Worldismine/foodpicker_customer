@@ -792,12 +792,6 @@
   color: var(--text-sub);
 }
 
-.payment-product {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-}
-
 .payment-product img {
   width: 92px;
   height: 92px;
@@ -814,17 +808,6 @@
   color: var(--text-sub);
 }
 
-.payment-footer-box {
-  position: sticky;
-  bottom: 12px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: var(--shadow);
-  margin-top: 16px;
-}
-
 .payment-total-label {
   margin: 0 0 6px;
   color: var(--text-sub);
@@ -835,14 +818,345 @@
   color: var(--primary);
 }
 
-.payment-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 14px;
-}
-
 .full-width {
   width: 100%;
+}
+
+.payment-screen {
+  padding-bottom: 120px;
+}
+
+.payment-top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.payment-top-header h1 {
+  flex: 1;
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.payment-header-icon {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.payment-header-icon:last-child {
+  color: #111827;
+}
+
+.payment-block {
+  margin-bottom: 24px;
+}
+
+.payment-section-title {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #4b5563;
+}
+
+.payment-product-card {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.payment-product-image {
+  width: 108px;
+  height: 108px;
+  border-radius: 14px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.payment-product-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.payment-discount-badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: rgba(58, 111, 234, 0.08);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.payment-product-info h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.35;
+  color: #111827;
+}
+
+.payment-store-name {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.payment-product-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.payment-product-price-row strong {
+  font-size: 18px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.payment-product-price-row span {
+  font-size: 14px;
+  color: #9ca3af;
+  text-decoration: line-through;
+}
+
+.payment-method-card {
+  overflow: hidden;
+  border: 1.5px solid #d1d5db;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.payment-method-card.open {
+  border-color: var(--primary);
+}
+
+.payment-method-selected,
+.payment-method-option {
+  width: 100%;
+  min-height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 22px;
+  background: #fff;
+  text-align: left;
+}
+
+.payment-method-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+
+.payment-card-chip {
+  width: 56px;
+  height: 32px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.card-color-shinhan {
+  background: linear-gradient(90deg, #4a74e8, #6b8cff);
+}
+
+.card-color-kb {
+  background: #f2c500;
+}
+
+.card-color-hyundai {
+  background: #000;
+}
+
+.card-color-samsung {
+  background: #1f5cb8;
+}
+
+.payment-method-selected strong,
+.payment-method-option strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.payment-method-selected p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.payment-method-arrow,
+.payment-method-check {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.payment-method-options {
+  border-top: 1px solid #e5e7eb;
+}
+
+.payment-method-option {
+  min-height: 82px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.payment-method-option:first-child {
+  border-top: none;
+}
+
+.payment-method-add strong {
+  color: #6b7280;
+  font-weight: 700;
+}
+
+.payment-add-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #9ca3af;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.payment-summary-card {
+  background: #f3f4f8;
+  border-radius: 24px;
+  padding: 24px 20px;
+  margin-bottom: 20px;
+}
+
+.payment-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.payment-summary-row span {
+  font-size: 16px;
+  color: #4b5563;
+}
+
+.payment-summary-row strong {
+  font-size: 17px;
+  color: #111827;
+}
+
+.payment-discount-text {
+  color: #dc2626 !important;
+}
+
+.payment-summary-divider {
+  height: 1px;
+  background: #d7dbe4;
+  margin: 12px 0 18px;
+}
+
+.payment-final-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.payment-final-row span {
+  font-size: 20px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.payment-final-row strong {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--primary);
+}
+
+.payment-eco-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 16px;
+  border-radius: 20px;
+  background: #eef4ff;
+  margin-bottom: 24px;
+}
+
+.payment-eco-icon {
+  font-size: 18px;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.payment-eco-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #334155;
+}
+
+.payment-eco-card strong {
+  font-weight: 900;
+  color: #111827;
+}
+
+.payment-submit-wrap {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.payment-submit-button {
+  width: 100%;
+  height: 64px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 900;
+  box-shadow: 0 12px 24px rgba(58, 111, 234, 0.28);
+}
+
+@media (max-width: 390px) {
+  .payment-product-card {
+    align-items: flex-start;
+  }
+
+  .payment-product-image {
+    width: 96px;
+    height: 96px;
+  }
+
+  .payment-product-info h3 {
+    font-size: 17px;
+  }
+
+  .payment-submit-button {
+    height: 58px;
+    font-size: 18px;
+  }
 }
 
 @media (max-width: 390px) {
@@ -874,14 +1188,6 @@
   .order-table-header,
   .order-table-row {
     font-size: 12px;
-  }
-
-  .detail-price-flow {
-    align-items: flex-start;
-  }
-  
-  .price-flow-current {
-    font-size: 16px;
   }
 
   .favorite-card-actions {
@@ -1310,4 +1616,123 @@
   justify-content: flex-end;
   gap: 8px;
   margin-top: 12px;
+}
+
+.home-search-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.search-button {
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  color: var(--text-main);
+  flex-shrink: 0;
+}
+
+.favorite-icon-button {
+  min-width: 52px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: #9ca3af;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.favorite-icon-button.active {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.25);
+  background: #fff5f5;
+}
+
+.favorite-count {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.store-link-button {
+  padding: 0;
+  margin: 0 0 10px;
+  text-align: left;
+  color: var(--text-sub);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.store-link-button:hover {
+  color: var(--primary);
+}
+
+.favorite-store-link {
+  margin-bottom: 8px;
+}
+
+.store-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.store-page-title {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
+
+.store-page-region {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-sub);
+}
+
+.store-page-home-button {
+  height: 38px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.store-page-info p {
+  margin: 0 0 8px;
+  line-height: 1.5;
+}
+
+.rank-badge.compact {
+  margin-bottom: 0;
+}
+
+@media (max-width: 390px) {
+  .home-search-bar {
+    gap: 6px;
+  }
+
+  .store-page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+
+.store-empty-row {
+  padding: 18px 0 6px;
+  color: var(--text-sub);
+  font-size: 14px;
 }

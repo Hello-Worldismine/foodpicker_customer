@@ -1,12 +1,14 @@
 import { useMemo, useState } from 'react'
 import { Bell, X } from 'lucide-react'
 import BottomNav from './components/common/BottomNav'
+import TrendChart from './components/common/TrendChart'
 import HomePage from './pages/HomePage'
 import MapPage from './pages/MapPage'
 import FavoritesPage from './pages/FavoritesPage'
 import OrdersPage from './pages/OrdersPage'
 import MyPage from './pages/MyPage'
 import PaymentPage from './pages/PaymentPage'
+import StorePage from './pages/StorePage'
 import {
   homePopularProducts,
   stores,
@@ -14,12 +16,13 @@ import {
   pickupOrders,
   myOrders,
 } from './data/mockData'
-import TrendChart from './components/common/TrendChart'
 
 function App() {
-  const [selectedProductDetail, setSelectedProductDetail] = useState(null)
   const [activeTab, setActiveTab] = useState('home')
   const [selectedPaymentItem, setSelectedPaymentItem] = useState(null)
+  const [selectedProductDetail, setSelectedProductDetail] = useState(null)
+  const [selectedPreviewImage, setSelectedPreviewImage] = useState(null)
+  const [selectedStore, setSelectedStore] = useState(null)
   const [favoriteAlertModal, setFavoriteAlertModal] = useState(null)
   const [alertInputValue, setAlertInputValue] = useState('')
   const [myPageOrderDetail, setMyPageOrderDetail] = useState(null)
@@ -40,6 +43,21 @@ function App() {
     return selectedPaymentItem || homePopularProducts[0]
   }, [selectedPaymentItem])
 
+  const selectedStoreProducts = useMemo(() => {
+    if (!selectedStore) return []
+    return homePopularProducts
+      .filter((product) => product.storeId === selectedStore.id && product.quantity > 0)
+      .map((product) => {
+        const store = stores.find((item) => item.id === product.storeId)
+        return {
+          ...product,
+          store: store?.name ?? '',
+          address: store?.address ?? '',
+          contact: store?.contact ?? '',
+        }
+      })
+  }, [selectedStore])
+
   const unreadCount = notifications.filter((item) => !item.read).length
 
   const addNotification = (title, message) => {
@@ -53,23 +71,56 @@ function App() {
     setNotifications((prev) => [newItem, ...prev])
   }
 
+  const enrichProductWithStore = (product) => {
+    const store = stores.find((item) => item.id === product.storeId)
+    return {
+      ...product,
+      store: product.store || store?.name || '',
+      address: product.address || store?.address || '서울 마포구 서교동 11-2',
+      contact: product.contact || store?.contact || '02-000-0000',
+    }
+  }
+
   const openPaymentPage = (product) => {
-    setSelectedPaymentItem(product)
+    setSelectedPaymentItem(enrichProductWithStore(product))
     setActiveTab('payment')
   }
 
+  const openStorePage = (storeValue) => {
+    let matchedStore = null
+
+    if (typeof storeValue === 'number') {
+      matchedStore = stores.find((item) => item.id === storeValue)
+    } else {
+      const keyword = String(storeValue).trim().toLowerCase()
+      matchedStore = stores.find((item) => item.name.toLowerCase().includes(keyword))
+    }
+
+    if (!matchedStore) {
+      addNotification('검색 결과 없음', '입력한 가게를 찾을 수 없어요.')
+      return
+    }
+
+    setSelectedStore(matchedStore)
+    setActiveTab('store')
+  }
+
   const toggleFavorite = (product) => {
+    const enrichedProduct = enrichProductWithStore(product)
+
     const exists = favoriteItems.some(
-      (item) => item.name === product.name && item.store === product.store,
+      (item) => item.name === enrichedProduct.name && item.storeId === enrichedProduct.storeId,
     )
 
     if (exists) {
       const removedItem = favoriteItems.find(
-        (item) => item.name === product.name && item.store === product.store,
+        (item) => item.name === enrichedProduct.name && item.storeId === enrichedProduct.storeId,
       )
 
       setFavoriteItems((prev) =>
-        prev.filter((item) => !(item.name === product.name && item.store === product.store)),
+        prev.filter(
+          (item) => !(item.name === enrichedProduct.name && item.storeId === enrichedProduct.storeId),
+        ),
       )
 
       if (removedItem) {
@@ -80,20 +131,18 @@ function App() {
         })
       }
 
-      addNotification('찜 해제', `${product.name} 상품이 관심 목록에서 제거되었어요.`)
+      addNotification('찜 해제', `${enrichedProduct.name} 상품이 관심 목록에서 제거되었어요.`)
       return
     }
 
     const newFavorite = {
-      ...product,
+      ...enrichedProduct,
       id: Date.now(),
-      price: product.currentPrice,
-      address: product.address || '서울 마포구 서교동 11-2',
-      contact: product.contact || '02-000-0000',
+      price: enrichedProduct.currentPrice,
     }
 
     setFavoriteItems((prev) => [newFavorite, ...prev])
-    addNotification('찜 완료', `${product.name} 상품을 관심 목록에 추가했어요.`)
+    addNotification('찜 완료', `${enrichedProduct.name} 상품을 관심 목록에 추가했어요.`)
   }
 
   const openAlertModal = (modalInfo) => {
@@ -113,7 +162,6 @@ function App() {
     if (!favoriteAlertModal || !alertInputValue.trim()) return
 
     const numericValue = Number(alertInputValue)
-
     if (Number.isNaN(numericValue) || numericValue <= 0) return
 
     setAlertSettings((prev) => ({
@@ -172,32 +220,34 @@ function App() {
   const renderPage = () => {
     switch (activeTab) {
       case 'home':
-  return (
-    <HomePage
-      products={homePopularProducts}
-      onReserve={openPaymentPage}
-      onToggleFavorite={toggleFavorite}
-      favoriteItems={favoriteItems}
-      onOpenNotifications={openNotifications}
-      unreadCount={unreadCount}
-      onOpenProductDetail={setSelectedProductDetail}
-    />
-  )
+        return (
+          <HomePage
+            products={homePopularProducts.map(enrichProductWithStore)}
+            onReserve={openPaymentPage}
+            onToggleFavorite={toggleFavorite}
+            favoriteItems={favoriteItems}
+            onOpenNotifications={openNotifications}
+            unreadCount={unreadCount}
+            onOpenProductDetail={(product) => setSelectedProductDetail(enrichProductWithStore(product))}
+            onOpenStore={openStorePage}
+          />
+        )
 
       case 'map':
         return <MapPage stores={stores} onPayNow={openPaymentPage} />
 
-        case 'favorites':
-          return (
-            <FavoritesPage
-              favoriteItems={favoriteItems}
-              onOpenAlertModal={openAlertModal}
-              alertSettings={alertSettings}
-              onCancelAlertSetting={cancelAlertSetting}
-              onOpenDetail={setSelectedProductDetail}
-              onReserve={openPaymentPage}
-            />
-          )
+      case 'favorites':
+        return (
+          <FavoritesPage
+            favoriteItems={favoriteItems}
+            onOpenAlertModal={openAlertModal}
+            alertSettings={alertSettings}
+            onCancelAlertSetting={cancelAlertSetting}
+            onOpenDetail={(product) => setSelectedProductDetail(enrichProductWithStore(product))}
+            onReserve={openPaymentPage}
+            onOpenStore={openStorePage}
+          />
+        )
 
       case 'orders':
         return <OrdersPage pickupOrders={pickupOrders} />
@@ -218,6 +268,19 @@ function App() {
           />
         )
 
+      case 'store':
+        return (
+          <StorePage
+            store={selectedStore}
+            products={selectedStoreProducts}
+            onBackHome={() => setActiveTab('home')}
+            onOpenDetail={(product) => setSelectedProductDetail(enrichProductWithStore(product))}
+            onReserve={openPaymentPage}
+            onToggleFavorite={toggleFavorite}
+            favoriteItems={favoriteItems}
+          />
+        )
+
       default:
         return null
     }
@@ -227,10 +290,7 @@ function App() {
     <div className="app-shell">
       <div className="mobile-app">
         {renderPage()}
-
-        {activeTab !== 'payment' && (
-          <BottomNav activeTab={activeTab} onChange={setActiveTab} />
-        )}
+        {activeTab !== 'payment' && <BottomNav activeTab={activeTab} onChange={setActiveTab} />}
       </div>
 
       {favoriteAlertModal && (
@@ -251,12 +311,8 @@ function App() {
             </div>
 
             <div className="popup-actions">
-              <button className="ghost-button" onClick={closeAlertModal}>
-                취소
-              </button>
-              <button className="primary-button" onClick={saveAlertSetting}>
-                저장
-              </button>
+              <button className="ghost-button" onClick={closeAlertModal}>취소</button>
+              <button className="primary-button" onClick={saveAlertSetting}>저장</button>
             </div>
           </div>
         </div>
@@ -294,101 +350,104 @@ function App() {
         </div>
       )}
 
-{selectedProductDetail && (
-  <div className="overlay">
-    <div className="popup-card detail-popup product-detail-popup">
-      <div className="popup-header-row">
-        <h3 className="popup-title">상품 상세보기</h3>
-        <button
-          className="icon-close"
-          onClick={() => setSelectedProductDetail(null)}
-        >
-          ✕
-        </button>
-      </div>
-
-      <div className="product-detail-gallery">
-        {selectedProductDetail.gallery?.map((image, index) => (
-          <img
-            key={`${selectedProductDetail.id}-${index}`}
-            src={image}
-            alt={`${selectedProductDetail.name} ${index + 1}`}
-          />
-        ))}
-      </div>
-
-      <div className="product-detail-section">
-        <h4>{selectedProductDetail.name}</h4>
-        <p>{selectedProductDetail.description}</p>
-      </div>
-
-      <div className="product-detail-summary-card">
-  <div className="detail-price-row">
-    <span className="detail-current-price">
-      {selectedProductDetail.currentPrice.toLocaleString()}원
-    </span>
-    <span className="detail-original-price">
-      {selectedProductDetail.originalPrice.toLocaleString()}원
-    </span>
-  </div>
-
-  <div className="detail-price-meta">
-    <span>하락률 {selectedProductDetail.discountRate}%</span>
-    <span>시작가 {selectedProductDetail.startPrice.toLocaleString()}원</span>
-    <span>하락폭 {selectedProductDetail.dropAmount.toLocaleString()}원</span>
-  </div>
-
-  <div className="detail-basic-info">
-    <div className="detail-basic-info-item">
-      <span className="detail-label">카테고리</span>
-      <strong>{selectedProductDetail.category}</strong>
-    </div>
-
-    <div className="detail-basic-info-item">
-      <span className="detail-label">수량</span>
-      <strong>{selectedProductDetail.quantity}개</strong>
-    </div>
-  </div>
-</div>
-
-      <div className="product-detail-section">
-        <h5>가격 변동 이력</h5>
-        <div className="detail-trend-chart-box">
-          <TrendChart data={selectedProductDetail.trend} />
-        </div>
-      </div>
-
-      <div className="product-detail-section">
-        <h5>판매자 등록 정보</h5>
-        <div className="detail-list">
-          <p><strong>매장명</strong> {selectedProductDetail.store}</p>
-          <p><strong>주소</strong> {selectedProductDetail.address}</p>
-          <p><strong>연락처</strong> {selectedProductDetail.contact}</p>
-          <p><strong>픽업 가능 시간</strong> {selectedProductDetail.pickupTime}</p>
-          <p><strong>상품 안내</strong> {selectedProductDetail.expirationNote}</p>
-        </div>
-
-        <div className="store-map-box">
-          <div className="store-map-title">매장 위치</div>
-          <div className="mini-map">
-            📍 {selectedProductDetail.store} 지도 영역
+      {selectedPreviewImage && (
+        <div className="overlay image-preview-overlay" onClick={() => setSelectedPreviewImage(null)}>
+          <div className="image-preview-card" onClick={(e) => e.stopPropagation()}>
+            <button className="image-preview-close" onClick={() => setSelectedPreviewImage(null)}>
+              ✕
+            </button>
+            <img className="image-preview-large" src={selectedPreviewImage} alt="확대 이미지" />
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-)}
+      )}
+
+      {selectedProductDetail && (
+        <div className="overlay">
+          <div className="popup-card detail-popup product-detail-popup">
+            <div className="popup-header-row">
+              <h3 className="popup-title">상품 상세보기</h3>
+              <button className="icon-close" onClick={() => setSelectedProductDetail(null)}>✕</button>
+            </div>
+
+            <div className="product-detail-gallery">
+              {selectedProductDetail.gallery?.map((image, index) => (
+                <button
+                  key={`${selectedProductDetail.id}-${index}`}
+                  type="button"
+                  className="product-detail-gallery-button"
+                  onClick={() => setSelectedPreviewImage(image)}
+                >
+                  <img src={image} alt={`${selectedProductDetail.name} ${index + 1}`} />
+                </button>
+              ))}
+            </div>
+
+            <div className="product-detail-section">
+              <h4>{selectedProductDetail.name}</h4>
+              <p>{selectedProductDetail.description}</p>
+            </div>
+
+            <div className="product-detail-summary-card">
+              <div className="detail-price-row">
+                <span className="detail-current-price">
+                  {(selectedProductDetail.currentPrice ?? selectedProductDetail.price ?? 0).toLocaleString()}원
+                </span>
+                <span className="detail-original-price">
+                  {(selectedProductDetail.originalPrice ?? 0).toLocaleString()}원
+                </span>
+              </div>
+
+              <div className="detail-price-meta">
+                <span>하락률 {selectedProductDetail.discountRate ?? 0}%</span>
+                <span>시작가 {(selectedProductDetail.startPrice ?? 0).toLocaleString()}원</span>
+                <span>하락폭 {(selectedProductDetail.dropAmount ?? 0).toLocaleString()}원</span>
+              </div>
+
+              <div className="detail-basic-info">
+                <div className="detail-basic-info-item">
+                  <span className="detail-label">카테고리</span>
+                  <strong>{selectedProductDetail.category}</strong>
+                </div>
+
+                <div className="detail-basic-info-item">
+                  <span className="detail-label">수량</span>
+                  <strong>{selectedProductDetail.quantity}개</strong>
+                </div>
+              </div>
+            </div>
+
+            <div className="product-detail-section">
+              <h5>가격 변동 이력</h5>
+              <div className="detail-trend-chart-box">
+                <TrendChart data={selectedProductDetail.trend} />
+              </div>
+            </div>
+
+            <div className="product-detail-section">
+              <h5>판매자 등록 정보</h5>
+              <div className="detail-list">
+                <p><strong>매장명</strong> {selectedProductDetail.store}</p>
+                <p><strong>주소</strong> {selectedProductDetail.address}</p>
+                <p><strong>연락처</strong> {selectedProductDetail.contact}</p>
+                <p><strong>픽업 가능 시간</strong> {selectedProductDetail.pickupTime}</p>
+                <p><strong>상품 안내</strong> {selectedProductDetail.expirationNote}</p>
+              </div>
+
+              <div className="store-map-box">
+                <div className="store-map-title">매장 위치</div>
+                <div className="mini-map">📍 {selectedProductDetail.store} 지도 영역</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {myPageOrderDetail && (
         <div className="overlay">
           <div className="popup-card detail-popup">
             <div className="popup-header-row">
               <h3 className="popup-title">주문 상세</h3>
-              <button
-                className="icon-close"
-                onClick={() => setMyPageOrderDetail(null)}
-              >
-                ✕
-              </button>
+              <button className="icon-close" onClick={() => setMyPageOrderDetail(null)}>✕</button>
             </div>
 
             <div className="detail-order-meta">
@@ -410,9 +469,7 @@ function App() {
 
             {myPageOrderDetail.status === '픽업 완료' && (
               <>
-                <p className="pickup-complete-time">
-                  픽업 완료 일시 : {myPageOrderDetail.pickedUpAt}
-                </p>
+                <p className="pickup-complete-time">픽업 완료 일시 : {myPageOrderDetail.pickedUpAt}</p>
                 <button className="primary-button full-width">리뷰쓰기</button>
               </>
             )}
