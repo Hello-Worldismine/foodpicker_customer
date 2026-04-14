@@ -34,6 +34,7 @@ function HomePage({
 
   return (
     <div className="page page-home">
+      <div className="home-header-section">
       <div className="home-topbar">
         <div className="location-bar">📍 현재 위치 · {currentLocation}</div>
 
@@ -43,19 +44,25 @@ function HomePage({
         </button>
       </div>
 
-      <div className="home-search-bar">
-        <input
-          className="text-input"
-          placeholder="가게 이름을 검색해보세요"
-          value={searchKeyword}
-          onChange={(e) => setSearchKeyword(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSearch()
-          }}
-        />
-        <button className="search-button" onClick={handleSearch}>
-          <Search size={18} />
-        </button>
+      <div className="home-search-bar-pill">
+  <input
+    className="home-search-input-pill"
+    placeholder="가게 이름을 검색해보세요"
+    value={searchKeyword}
+    onChange={(e) => setSearchKeyword(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter') handleSearch()
+    }}
+  />
+  <button
+    className="home-search-icon-button"
+    onClick={handleSearch}
+    type="button"
+    aria-label="검색"
+  >
+    <Search size={28} strokeWidth={2.4} />
+  </button>
+</div>
       </div>
 
       <SectionCard className="banner-card">
