@@ -15,8 +15,8 @@ export const categories = [
   { id: 6, name: '육류/어류', icon: 'fish' },
   { id: 7, name: '식당', icon: 'utensils' },
   { id: 8, name: '편의점', icon: 'package' },
-  { id: 9, name: '70%할인상품(마감임박)', icon: 'badgePercent' },
-  { id: 10, name: '초긴급(마감30분전)', icon: 'clock3' },
+  { id: 9, name: '70%할인상품', icon: 'badgePercent' },
+  { id: 10, name: '마감임박', icon: 'clock3' },
 ]
   
 export const stores = [
