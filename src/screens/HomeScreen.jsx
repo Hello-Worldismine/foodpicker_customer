@@ -583,7 +583,7 @@ export default function HomeScreen({ onProductPress, onStorePress, onLike, produ
           <div style={{ marginTop: 12, marginBottom: 0 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 16px 12px', background: colors.white }}>
               <div>
-                <p style={{ margin: 0, fontSize: 17, fontWeight: 800, color: colors.charcoalBlack }}>🏪 내 주변 매장</p>
+                <p style={{ margin: 0, fontSize: 17, fontWeight: 800, color: colors.charcoalBlack }}>내 주변 매장</p>
                 <p style={{ margin: '2px 0 0', fontSize: 13, color: colors.mediumGray }}>가까운 순으로 보기</p>
               </div>
               <button onClick={() => setShowStoreList(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 2, fontSize: 13, color: colors.primaryGreen, fontWeight: 600 }}>
@@ -600,7 +600,7 @@ export default function HomeScreen({ onProductPress, onStorePress, onLike, produ
 
           {/* 새로 등록된 상품 */}
           <div style={{ marginTop: 12, background: colors.white, padding: '18px 16px 20px' }}>
-            <p style={{ margin: '0 0 4px', fontSize: 17, fontWeight: 800, color: colors.charcoalBlack }}>🆕 새로 등록된 상품</p>
+            <p style={{ margin: '0 0 4px', fontSize: 17, fontWeight: 800, color: colors.charcoalBlack }}>새로 등록된 상품</p>
             <p style={{ margin: '0 0 14px', fontSize: 13, color: colors.mediumGray }}>방금 막 올라왔어요</p>
             {newest.length === 0
               ? <div style={{ background: colors.softGray, borderRadius: 14, padding: 24, textAlign: 'center', color: colors.mediumGray, fontSize: 14 }}>등록된 상품이 없습니다</div>
