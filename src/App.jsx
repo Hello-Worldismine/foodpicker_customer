@@ -14,6 +14,7 @@ import TermsScreen from './screens/TermsScreen';
 import MyOrderListScreen from './screens/MyOrderListScreen';
 import ReviewScreen from './screens/ReviewScreen';
 import NotificationScreen from './screens/NotificationScreen';
+import CouponScreen from './screens/CouponScreen';
 import { products as initialProducts, mockOrders, mockCoupons } from './mockData';
 
 function App() {
@@ -70,11 +71,29 @@ function App() {
     setScreen({ name: 'myOrders' });
   }
 
+  // 마이페이지 쿠폰함 버튼
+  function handleCouponsPress() {
+    setScreen({ name: 'coupons' });
+  }
+
   function getProduct(id) {
     return productList.find(p => p.id === id);
   }
 
   // ─── 스택 화면들 ───────────────────────────────────────
+
+  if (screen?.name === 'coupons') {
+    return (
+      <AppShell>
+        <ScrollableScreen key="coupons">
+          <CouponScreen
+            coupons={mockCoupons}
+            onBack={() => setScreen(null)}
+          />
+        </ScrollableScreen>
+      </AppShell>
+    );
+  }
 
   if (screen?.name === 'notifications') {
     return (
@@ -217,7 +236,13 @@ function App() {
           <OrderHistoryScreen orders={orders} onCancelOrder={handleCancelOrder} />
         )}
         {tab === 'mypage' && (
-          <MyPageScreen onTermsPress={handleTermsPress} orders={orders} onOrdersPress={handleViewOrders} />
+          <MyPageScreen
+            onTermsPress={handleTermsPress}
+            orders={orders}
+            onOrdersPress={handleViewOrders}
+            coupons={mockCoupons}
+            onCouponsPress={handleCouponsPress}
+          />
         )}
       </div>
       <BottomNav current={tab} onChange={setTab} />

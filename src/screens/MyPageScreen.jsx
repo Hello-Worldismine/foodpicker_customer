@@ -1,22 +1,23 @@
-import { CreditCard, Bell, HelpCircle, FileText, LogOut, UserX, ChevronRight, User, ClipboardList } from 'lucide-react';
+import { CreditCard, Bell, HelpCircle, FileText, LogOut, UserX, ChevronRight, User, ClipboardList, Ticket } from 'lucide-react';
 import { colors } from '../theme';
 
-export default function MyPageScreen({ onTermsPress, orders = [], onOrdersPress }) {
+export default function MyPageScreen({ onTermsPress, orders = [], onOrdersPress, coupons = [], onCouponsPress }) {
   const envStats = [
     { label: '구한 음식', value: '12개' },
     { label: '예상 절감', value: '38,000원' },
     { label: '폐기 감소', value: '4.2kg' },
   ];
 
-  const pendingCount = orders.filter(o => o.status === 'pending').length;
+  const pendingCount = orders.filter(o => o.status === 'pending' || o.status === 'pickupReady').length;
 
   const menuItems = [
-    { key: 'orders', icon: ClipboardList, label: '주문내역', color: colors.charcoalBlack, onPress: onOrdersPress, badge: pendingCount > 0 ? pendingCount : null },
-    { key: 'payment', icon: CreditCard, label: '결제수단 관리', color: colors.charcoalBlack },
-    { key: 'notifications', icon: Bell, label: '알림 설정', color: colors.charcoalBlack },
-    { key: 'support', icon: HelpCircle, label: '고객센터', color: colors.charcoalBlack },
-    { key: 'faq', icon: FileText, label: '자주 묻는 질문', color: colors.charcoalBlack },
-    { key: 'terms', icon: FileText, label: '약관 및 개인정보처리방침', color: colors.charcoalBlack, onPress: onTermsPress },
+    { key: 'orders',    icon: ClipboardList, label: '주문내역',            color: colors.charcoalBlack, onPress: onOrdersPress,  badge: pendingCount > 0 ? pendingCount : null },
+    { key: 'coupons',   icon: Ticket,        label: '쿠폰함',              color: colors.charcoalBlack, onPress: onCouponsPress, badge: coupons.length > 0 ? `${coupons.length}장` : null },
+    { key: 'payment',   icon: CreditCard,    label: '결제수단 관리',        color: colors.charcoalBlack },
+    { key: 'notifications', icon: Bell,      label: '알림 설정',            color: colors.charcoalBlack },
+    { key: 'support',   icon: HelpCircle,    label: '고객센터',             color: colors.charcoalBlack },
+    { key: 'faq',       icon: FileText,      label: '자주 묻는 질문',       color: colors.charcoalBlack },
+    { key: 'terms',     icon: FileText,      label: '약관 및 개인정보처리방침', color: colors.charcoalBlack, onPress: onTermsPress },
   ];
 
   return (
@@ -76,9 +77,11 @@ export default function MyPageScreen({ onTermsPress, orders = [], onOrdersPress 
                 <span style={{ flex: 1, fontSize: 15, color: colors.charcoalBlack, textAlign: 'left' }}>{item.label}</span>
                 {item.badge && (
                   <span style={{
-                    background: colors.primaryGreen, color: colors.white,
+                    background: item.key === 'coupons' ? colors.freshMint : colors.primaryGreen,
+                    color: item.key === 'coupons' ? colors.primaryGreen : colors.white,
                     fontSize: 11, fontWeight: 700,
-                    padding: '2px 7px', borderRadius: 20, marginRight: 6,
+                    padding: '2px 8px', borderRadius: 20, marginRight: 6,
+                    border: item.key === 'coupons' ? `1px solid ${colors.primaryGreen}` : 'none',
                   }}>{item.badge}</span>
                 )}
                 <ChevronRight size={16} color={colors.mediumGray} />
