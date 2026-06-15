@@ -269,9 +269,31 @@ export const mockBannerAds = [
   },
 ];
 
+// ─── 쿠폰 목 데이터 ─────────────────────────────────────
+// TODO: 관리자 앱에서 발행된 쿠폰을 API로 불러오도록 교체
+// 관리자 쿠폰 구조: { id, name, discountType('정액'|'정률'), discountValue, minOrderAmount, endDate }
+export const mockCoupons = [
+  {
+    id: 'CPN-001',
+    name: '신규 가입 할인 쿠폰',
+    discountType: '정액',
+    discountValue: 1000,
+    minOrderAmount: 5000,
+    endDate: '2024.12.31',
+  },
+  {
+    id: 'CPN-002',
+    name: '환경 챔피언 쿠폰',
+    discountType: '정률',
+    discountValue: 10,
+    minOrderAmount: 3000,
+    endDate: '2024.12.31',
+  },
+];
+
 export const mockOrders = [
   {
-    id: 'FP-1024',
+    id: 'ORD-20240615-1024',
     productId: 1,
     productName: '닭가슴살 샐러드',
     store: '그린샐러드 강남점',
@@ -279,11 +301,13 @@ export const mockOrders = [
     pickupTime: '오늘 18:00~20:00',
     quantity: 1,
     totalPrice: 4900,
-    status: 'pending',
+    discountedPrice: 4900,
+    couponName: null,
+    status: 'pickupReady',   // 결제완료 → 픽업대기
     orderedAt: new Date().toISOString(),
   },
   {
-    id: 'FP-1018',
+    id: 'ORD-20240614-1018',
     productId: 2,
     productName: '통밀 크로와상 2개입',
     store: '베이커리온 역삼점',
@@ -291,6 +315,8 @@ export const mockOrders = [
     pickupTime: '어제 17:00~21:00',
     quantity: 2,
     totalPrice: 3800,
+    discountedPrice: 2800,
+    couponName: '신규 가입 할인 쿠폰',
     status: 'completed',
     orderedAt: new Date(Date.now() - 86400000).toISOString(),
   },

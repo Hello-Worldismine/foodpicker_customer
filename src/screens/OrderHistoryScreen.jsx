@@ -4,9 +4,11 @@ import { colors } from '../theme';
 import PickupMapCard from '../components/PickupMapCard';
 
 const STATUS_LABELS = {
-  pending: { label: '픽업 대기', color: colors.primaryGreen, bg: colors.freshMint },
-  completed: { label: '픽업 완료', color: colors.mediumGray, bg: colors.softGray },
-  cancelled: { label: '취소됨', color: colors.alertRed, bg: '#FFF0F0' },
+  pickupReady: { label: '픽업 대기', color: colors.primaryGreen, bg: colors.freshMint },
+  pending:     { label: '픽업 대기', color: colors.primaryGreen, bg: colors.freshMint },  // 하위 호환
+  completed:   { label: '픽업 완료', color: colors.mediumGray,   bg: colors.softGray },
+  cancelling:  { label: '취소 요청', color: '#B45309',            bg: '#FEF3C7' },
+  cancelled:   { label: '취소됨',   color: colors.alertRed,      bg: '#FFF0F0' },
 };
 
 export default function OrderHistoryScreen({ orders, onCancelOrder }) {
@@ -15,9 +17,9 @@ export default function OrderHistoryScreen({ orders, onCancelOrder }) {
   const [showCancelConfirm, setShowCancelConfirm] = useState(null);
 
   const filtered = orders.filter(o => {
-    if (tab === 'pending') return o.status === 'pending';
+    if (tab === 'pending') return o.status === 'pickupReady' || o.status === 'pending';
     if (tab === 'completed') return o.status === 'completed';
-    if (tab === 'cancelled') return o.status === 'cancelled';
+    if (tab === 'cancelled') return o.status === 'cancelled' || o.status === 'cancelling';
     return true;
   });
 
@@ -88,10 +90,16 @@ export default function OrderHistoryScreen({ orders, onCancelOrder }) {
                       <Clock size={12} color={colors.warmOrange} /> {order.pickupTime}
                     </span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: order.couponName ? 4 : 0 }}>
                     <span style={{ fontSize: 12, color: colors.mediumGray }}>픽업번호</span>
                     <span style={{ fontSize: 14, fontWeight: 900, color: colors.primaryGreen }}>{order.id}</span>
                   </div>
+                  {order.couponName && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: 12, color: colors.mediumGray }}>적용 쿠폰</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: colors.primaryGreen }}>{order.couponName}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* 예약중: 픽업 장소 + 지도 */}

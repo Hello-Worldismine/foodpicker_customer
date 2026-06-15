@@ -14,7 +14,7 @@ import TermsScreen from './screens/TermsScreen';
 import MyOrderListScreen from './screens/MyOrderListScreen';
 import ReviewScreen from './screens/ReviewScreen';
 import NotificationScreen from './screens/NotificationScreen';
-import { products as initialProducts, mockOrders } from './mockData';
+import { products as initialProducts, mockOrders, mockCoupons } from './mockData';
 
 function App() {
   const [tab, setTab] = useState('home');
@@ -59,6 +59,13 @@ function App() {
     );
   }
 
+  // 주문완료 화면 → 하단 탭 주문내역으로 이동
+  function handleGoToOrdersTab() {
+    setScreen(null);
+    setTab('orders');
+  }
+
+  // 마이페이지 주문내역 버튼 → 별도 전체 목록 화면
   function handleViewOrders() {
     setScreen({ name: 'myOrders' });
   }
@@ -105,7 +112,7 @@ function App() {
         <ScrollableScreen key="complete">
           <OrderCompleteScreen
             order={screen.data.order}
-            onViewOrders={handleViewOrders}
+            onViewOrders={handleGoToOrdersTab}
             onHome={() => { setScreen(null); setTab('home'); }}
           />
         </ScrollableScreen>
@@ -121,6 +128,7 @@ function App() {
           <OrderScreen
             product={product}
             qty={screen.data.qty}
+            coupons={mockCoupons}
             onBack={() => setScreen({ name: 'detail', data: { product } })}
             onComplete={handleOrderComplete}
           />

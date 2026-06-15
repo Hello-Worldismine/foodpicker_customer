@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { colors } from '../theme';
 
 const STATUS_INFO = {
-  pending:   { label: '픽업 대기', color: colors.primaryGreen, bg: colors.freshMint,  Icon: Clock },
-  completed: { label: '픽업 완료', color: '#6B7280',           bg: '#F3F4F6',         Icon: CheckCircle },
-  cancelled: { label: '취소됨',    color: colors.alertRed,      bg: '#FFF0F0',         Icon: XCircle },
+  pickupReady: { label: '픽업 대기', color: colors.primaryGreen, bg: colors.freshMint, Icon: Clock },
+  pending:     { label: '픽업 대기', color: colors.primaryGreen, bg: colors.freshMint, Icon: Clock },
+  completed:   { label: '픽업 완료', color: '#6B7280',           bg: '#F3F4F6',        Icon: CheckCircle },
+  cancelling:  { label: '취소 요청', color: '#B45309',           bg: '#FEF3C7',        Icon: AlertCircle },
+  cancelled:   { label: '취소됨',    color: colors.alertRed,     bg: '#FFF0F0',        Icon: XCircle },
 };
 
 const PAGE_SIZE = 10;
