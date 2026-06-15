@@ -15,6 +15,7 @@ import MyOrderListScreen from './screens/MyOrderListScreen';
 import ReviewScreen from './screens/ReviewScreen';
 import NotificationScreen from './screens/NotificationScreen';
 import CouponScreen from './screens/CouponScreen';
+import WriteReviewScreen from './screens/WriteReviewScreen';
 import { products as initialProducts, mockOrders, mockCoupons } from './mockData';
 
 function App() {
@@ -76,11 +77,29 @@ function App() {
     setScreen({ name: 'coupons' });
   }
 
+  // 주문내역 리뷰 쓰기 버튼
+  function handleWriteReview(order) {
+    setScreen({ name: 'writeReview', data: { order } });
+  }
+
   function getProduct(id) {
     return productList.find(p => p.id === id);
   }
 
   // ─── 스택 화면들 ───────────────────────────────────────
+
+  if (screen?.name === 'writeReview') {
+    return (
+      <AppShell>
+        <ScrollableScreen key="writeReview">
+          <WriteReviewScreen
+            order={screen.data.order}
+            onBack={() => { setScreen(null); setTab('orders'); }}
+          />
+        </ScrollableScreen>
+      </AppShell>
+    );
+  }
 
   if (screen?.name === 'coupons') {
     return (
@@ -233,7 +252,11 @@ function App() {
           />
         )}
         {tab === 'orders' && (
-          <OrderHistoryScreen orders={orders} onCancelOrder={handleCancelOrder} />
+          <OrderHistoryScreen
+            orders={orders}
+            onCancelOrder={handleCancelOrder}
+            onWriteReview={handleWriteReview}
+          />
         )}
         {tab === 'mypage' && (
           <MyPageScreen

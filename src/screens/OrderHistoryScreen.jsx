@@ -11,7 +11,7 @@ const STATUS_LABELS = {
   cancelled:   { label: '취소됨',   color: colors.alertRed,      bg: '#FFF0F0' },
 };
 
-export default function OrderHistoryScreen({ orders, onCancelOrder }) {
+export default function OrderHistoryScreen({ orders, onCancelOrder, onWriteReview }) {
   const [tab, setTab] = useState('pending');
   const [showQR, setShowQR] = useState(null);
   const [showCancelConfirm, setShowCancelConfirm] = useState(null);
@@ -102,8 +102,8 @@ export default function OrderHistoryScreen({ orders, onCancelOrder }) {
                   )}
                 </div>
 
-                {/* 예약중: 픽업 장소 + 지도 */}
-                {order.status === 'pending' && order.storeAddress && (
+                {/* 예약중/픽업대기: 픽업 장소 + 지도 */}
+                {(order.status === 'pending' || order.status === 'pickupReady') && order.storeAddress && (
                   <div style={{ marginBottom: 12 }}>
                     <PickupMapCard
                       address={order.storeAddress}
@@ -115,27 +115,30 @@ export default function OrderHistoryScreen({ orders, onCancelOrder }) {
                 )}
 
                 {order.status === 'completed' && (
-                  <button style={{
-                    width: '100%',
-                    background: colors.freshMint,
-                    color: colors.primaryGreen,
-                    border: `1.5px solid ${colors.primaryGreen}`,
-                    borderRadius: 10,
-                    padding: '10px',
-                    fontSize: 13,
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 6,
-                  }}>
+                  <button
+                    onClick={() => onWriteReview && onWriteReview(order)}
+                    style={{
+                      width: '100%',
+                      background: colors.freshMint,
+                      color: colors.primaryGreen,
+                      border: `1.5px solid ${colors.primaryGreen}`,
+                      borderRadius: 10,
+                      padding: '10px',
+                      fontSize: 13,
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 6,
+                    }}
+                  >
                     <Star size={14} color={colors.primaryGreen} fill={colors.primaryGreen} />
                     리뷰 쓰기
                   </button>
                 )}
 
-                {order.status === 'pending' && (
+                {(order.status === 'pending' || order.status === 'pickupReady') && (
                   <div style={{ display: 'flex', gap: 8 }}>
                     <button onClick={() => setShowQR(order)} style={{
                       flex: 1,
