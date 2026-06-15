@@ -59,11 +59,11 @@ function MapPlaceholder() {
   );
 }
 
-export default function PickupMapCard({ address, storeName, compact = false }) {
+export default function PickupMapCard({ address, storeName, compact = false, standalone = false }) {
   return (
-    <div style={{ background: colors.white, borderRadius: 16, overflow: 'hidden' }}>
+    <div style={standalone ? { background: colors.white, borderRadius: 16, overflow: 'hidden' } : {}}>
       {/* 주소 헤더 */}
-      <div style={{ padding: compact ? '14px 16px 12px' : '16px 16px 12px' }}>
+      <div style={{ padding: compact ? '0 0 12px' : '0 0 12px' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
           <div style={{ flex: 1 }}>
             {storeName && (
@@ -94,7 +94,7 @@ export default function PickupMapCard({ address, storeName, compact = false }) {
       </div>
 
       {/* 지도 영역 */}
-      <div style={{ padding: '0 16px 16px' }}>
+      <div style={{ paddingBottom: compact ? 0 : 4 }}>
         <MapPlaceholder />
       </div>
     </div>

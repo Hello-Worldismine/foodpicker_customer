@@ -140,17 +140,13 @@ export default function ProductDetailScreen({ product, onBack, onOrder, onLike, 
         </div>
 
         {/* 픽업 장소 + 지도 */}
-        <div style={{ margin: '0 0 8px', padding: '0 0 0' }}>
-          <div style={{ padding: '16px 16px 0', background: colors.white }}>
-            <p style={{ margin: '0 0 12px', fontSize: 14, fontWeight: 800, color: colors.mediumGray }}>픽업 장소</p>
-          </div>
-          <div style={{ padding: '0 16px 0', background: colors.white }}>
-            <PickupMapCard
-              address={product.pickupAddress}
-              storeName={product.store}
-            />
-          </div>
-          <div style={{ height: 8, background: colors.softGray }} />
+        <div style={{ background: colors.white, padding: '16px 16px 0', marginBottom: 8 }}>
+          <p style={{ margin: '0 0 12px', fontSize: 14, fontWeight: 800, color: colors.mediumGray }}>픽업 장소</p>
+          <PickupMapCard
+            address={product.pickupAddress}
+            storeName={product.store}
+          />
+          <div style={{ height: 16 }} />
         </div>
 
         {/* Detail sections */}

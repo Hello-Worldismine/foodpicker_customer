@@ -101,6 +101,7 @@ export default function OrderHistoryScreen({ orders, onCancelOrder }) {
                       address={order.storeAddress}
                       storeName={order.store}
                       compact
+                      standalone
                     />
                   </div>
                 )}
