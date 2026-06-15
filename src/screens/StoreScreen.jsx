@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, MapPin, Clock, Phone, Star, Share2, ChevronRight, Navigation } from 'lucide-react';
+import { ArrowLeft, MapPin, Clock, Phone, Star, Share2, Navigation, MessageSquare } from 'lucide-react';
 import { colors } from '../theme';
 import ProductCard from '../components/ProductCard';
 import { products } from '../mockData';
@@ -116,7 +116,7 @@ const storeDetails = {
   },
 };
 
-export default function StoreScreen({ storeId, onBack, onProductPress, onLike, productList }) {
+export default function StoreScreen({ storeId, onBack, onProductPress, onLike, productList, onReviewPress }) {
   const [activeTab, setActiveTab] = useState('products');
   const store = storeDetails[storeId];
 
@@ -174,11 +174,14 @@ export default function StoreScreen({ storeId, onBack, onProductPress, onLike, p
             <p style={{ margin: 0, fontSize: 20, fontWeight: 900, color: colors.white }}>{store.name}</p>
             <p style={{ margin: '4px 0 6px', fontSize: 13, color: 'rgba(255,255,255,0.8)' }}>{store.category}</p>
             <div style={{ display: 'flex', gap: 6 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.15)', borderRadius: 20, padding: '3px 9px' }}>
+              <button
+                onClick={() => onReviewPress && onReviewPress(store)}
+                style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.15)', borderRadius: 20, padding: '3px 9px', border: 'none', cursor: 'pointer' }}
+              >
                 <Star size={12} color="#FFD700" fill="#FFD700" />
                 <span style={{ fontSize: 13, color: colors.white, fontWeight: 700 }}>{store.rating}</span>
                 <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)' }}>({store.reviewCount})</span>
-              </div>
+              </button>
               <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.15)', borderRadius: 20, padding: '3px 9px' }}>
                 <MapPin size={11} color="rgba(255,255,255,0.8)" />
                 <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>
@@ -206,12 +209,12 @@ export default function StoreScreen({ storeId, onBack, onProductPress, onLike, p
           <Phone size={18} color={colors.charcoalBlack} />
           <span style={{ fontSize: 12, color: colors.charcoalBlack, fontWeight: 600 }}>전화</span>
         </button>
-        <button style={{
+        <button onClick={() => onReviewPress && onReviewPress(store)} style={{
           flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
           background: colors.softGray, border: 'none', borderRadius: 12, padding: '10px 8px', cursor: 'pointer',
         }}>
-          <Clock size={18} color={colors.charcoalBlack} />
-          <span style={{ fontSize: 12, color: colors.charcoalBlack, fontWeight: 600 }}>영업시간</span>
+          <MessageSquare size={18} color={colors.charcoalBlack} />
+          <span style={{ fontSize: 12, color: colors.charcoalBlack, fontWeight: 600 }}>리뷰</span>
         </button>
       </div>
 

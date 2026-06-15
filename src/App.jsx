@@ -11,6 +11,9 @@ import OrderCompleteScreen from './screens/OrderCompleteScreen';
 import StoreScreen from './screens/StoreScreen';
 import LikedScreen from './screens/LikedScreen';
 import TermsScreen from './screens/TermsScreen';
+import MyOrderListScreen from './screens/MyOrderListScreen';
+import ReviewScreen from './screens/ReviewScreen';
+import NotificationScreen from './screens/NotificationScreen';
 import { products as initialProducts, mockOrders } from './mockData';
 
 function App() {
@@ -25,6 +28,10 @@ function App() {
 
   function handleStorePress(storeId) {
     setScreen({ name: 'store', data: { storeId } });
+  }
+
+  function handleReviewPress(store) {
+    setScreen({ name: 'review', data: { store } });
   }
 
   function handleTermsPress() {
@@ -53,8 +60,7 @@ function App() {
   }
 
   function handleViewOrders() {
-    setScreen(null);
-    setTab('orders');
+    setScreen({ name: 'myOrders' });
   }
 
   function getProduct(id) {
@@ -62,6 +68,26 @@ function App() {
   }
 
   // ─── 스택 화면들 ───────────────────────────────────────
+
+  if (screen?.name === 'notifications') {
+    return (
+      <AppShell>
+        <ScrollableScreen key="notifications">
+          <NotificationScreen onBack={() => setScreen(null)} />
+        </ScrollableScreen>
+      </AppShell>
+    );
+  }
+
+  if (screen?.name === 'myOrders') {
+    return (
+      <AppShell>
+        <ScrollableScreen key="myOrders">
+          <MyOrderListScreen orders={orders} onBack={() => setScreen(null)} />
+        </ScrollableScreen>
+      </AppShell>
+    );
+  }
 
   if (screen?.name === 'terms') {
     return (
@@ -120,6 +146,20 @@ function App() {
     );
   }
 
+  if (screen?.name === 'review') {
+    const { store } = screen.data;
+    return (
+      <AppShell>
+        <ScrollableScreen key={`review-${store.id}`}>
+          <ReviewScreen
+            store={store}
+            onBack={() => setScreen({ name: 'store', data: { storeId: store.id } })}
+          />
+        </ScrollableScreen>
+      </AppShell>
+    );
+  }
+
   if (screen?.name === 'store') {
     return (
       <AppShell>
@@ -130,6 +170,7 @@ function App() {
             onProductPress={handleProductPress}
             onLike={handleLike}
             productList={productList}
+            onReviewPress={handleReviewPress}
           />
         </ScrollableScreen>
       </AppShell>
@@ -147,6 +188,7 @@ function App() {
             onStorePress={handleStorePress}
             onLike={handleLike}
             productList={productList}
+            onNotificationPress={() => setScreen({ name: 'notifications' })}
           />
         )}
         {tab === 'map' && (

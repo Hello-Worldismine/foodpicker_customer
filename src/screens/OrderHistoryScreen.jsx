@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigation, QrCode, X, Clock } from 'lucide-react';
+import { Navigation, QrCode, X, Clock, Star } from 'lucide-react';
 import { colors } from '../theme';
 import PickupMapCard from '../components/PickupMapCard';
 
@@ -103,6 +103,27 @@ export default function OrderHistoryScreen({ orders, onCancelOrder }) {
                       compact
                     />
                   </div>
+                )}
+
+                {order.status === 'completed' && (
+                  <button style={{
+                    width: '100%',
+                    background: colors.freshMint,
+                    color: colors.primaryGreen,
+                    border: `1.5px solid ${colors.primaryGreen}`,
+                    borderRadius: 10,
+                    padding: '10px',
+                    fontSize: 13,
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 6,
+                  }}>
+                    <Star size={14} color={colors.primaryGreen} fill={colors.primaryGreen} />
+                    리뷰 쓰기
+                  </button>
                 )}
 
                 {order.status === 'pending' && (

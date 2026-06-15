@@ -51,8 +51,18 @@ export default function ProductCard({ product, onPress, onLike, onStorePress }) 
         justifyContent: 'center',
         fontSize: 56,
         position: 'relative',
+        overflow: 'hidden',
       }}>
-        {product.images[0]}
+        {/* TODO: 판매자 앱에서 등록한 대표사진 사용; 없으면 이모지 폴백 */}
+        {product.thumbnail ? (
+          <img
+            src={product.thumbnail}
+            alt={product.name}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          />
+        ) : (
+          <span>{product.emoji || product.images[0]}</span>
+        )}
         {/* Badges */}
         <div style={{ position: 'absolute', top: 8, left: 8, display: 'flex', gap: 4, flexWrap: 'wrap' }}>
           {product.badges.map(b => {

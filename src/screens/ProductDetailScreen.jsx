@@ -42,8 +42,13 @@ export default function ProductDetailScreen({ product, onBack, onOrder, onLike, 
   return (
     <div style={{ background: colors.softGray, minHeight: '100%' }}>
       {/* Image area */}
-      <div style={{ position: 'relative', background: '#E8F0E8', height: 280, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 100 }}>
-        {product.images[0]}
+      <div style={{ position: 'relative', background: '#E8F0E8', height: 280, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 100, overflow: 'hidden' }}>
+        {/* TODO: 판매자 앱 대표사진 사용; 없으면 이모지 폴백 */}
+        {product.thumbnail ? (
+          <img src={product.thumbnail} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        ) : (
+          <span>{product.emoji || product.images[0]}</span>
+        )}
         {/* Top bar */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, display: 'flex', justifyContent: 'space-between', padding: 14 }}>
           <button onClick={onBack} style={{ background: 'rgba(255,255,255,0.9)', border: 'none', borderRadius: '50%', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>

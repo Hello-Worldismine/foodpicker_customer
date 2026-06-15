@@ -23,7 +23,9 @@ export const products = [
     store: '그린샐러드 강남점',
     storeId: 1,
     distance: 450,
-    images: ['🥗'],
+    thumbnail: null,     // 판매자 앱에서 대표사진 등록 시 URL 저장
+    emoji: '🥗',         // thumbnail 없을 때 표시할 이모지 폴백
+    images: [],          // { url: string, isThumbnail: boolean }[] — 최대 10장
     category: '샐러드',
     originalPrice: 8900,
     salePrice: 4900,
@@ -53,7 +55,9 @@ export const products = [
     store: '베이커리온 역삼점',
     storeId: 2,
     distance: 280,
-    images: ['🥐'],
+    thumbnail: null,
+    emoji: '🥐',
+    images: [],
     category: '빵',
     originalPrice: 4800,
     salePrice: 1900,
@@ -83,7 +87,9 @@ export const products = [
     store: '한솥도시락 강남역점',
     storeId: 3,
     distance: 720,
-    images: ['🍱'],
+    thumbnail: null,
+    emoji: '🍱',
+    images: [],
     category: '도시락',
     originalPrice: 7500,
     salePrice: 3500,
@@ -113,7 +119,9 @@ export const products = [
     store: '파리바게뜨 선릉점',
     storeId: 4,
     distance: 950,
-    images: ['🍰'],
+    thumbnail: null,
+    emoji: '🍰',
+    images: [],
     category: '디저트',
     originalPrice: 5500,
     salePrice: 2200,
@@ -143,7 +151,9 @@ export const products = [
     store: '자연반찬 강남점',
     storeId: 5,
     distance: 600,
-    images: ['🥡'],
+    thumbnail: null,
+    emoji: '🥡',
+    images: [],
     category: '반찬',
     originalPrice: 6000,
     salePrice: 2500,
@@ -173,7 +183,9 @@ export const products = [
     store: '카페블랑 강남점',
     storeId: 6,
     distance: 330,
-    images: ['☕'],
+    thumbnail: null,
+    emoji: '☕',
+    images: [],
     category: '음료',
     originalPrice: 9800,
     salePrice: 4500,
@@ -200,12 +212,61 @@ export const products = [
 ];
 
 export const stores = [
-  { id: 1, name: '그린샐러드 강남점', lat: 37.5012, lng: 127.0396, productCount: 3, pickupTime: '18:00~20:00', distance: 450, status: 'selling' },
-  { id: 2, name: '베이커리온 역삼점', lat: 37.5008, lng: 127.0368, productCount: 5, pickupTime: '17:00~21:00', distance: 280, status: 'selling' },
-  { id: 3, name: '한솥도시락 강남역점', lat: 37.4979, lng: 127.0276, productCount: 0, pickupTime: '16:00~19:00', distance: 720, status: 'soldout' },
-  { id: 4, name: '파리바게뜨 선릉점', lat: 37.5044, lng: 127.0491, productCount: 2, pickupTime: '19:00~21:30', distance: 950, status: 'closing' },
-  { id: 5, name: '자연반찬 강남점', lat: 37.5021, lng: 127.0312, productCount: 4, pickupTime: '17:00~20:00', distance: 600, status: 'selling' },
-  { id: 6, name: '카페블랑 강남점', lat: 37.4993, lng: 127.0348, productCount: 6, pickupTime: '15:00~18:00', distance: 330, status: 'selling' },
+  { id: 1, name: '그린샐러드 강남점',  lat: 37.5012, lng: 127.0396, category: '샐러드', productCount: 3, pickupTime: '18:00~20:00', distance: 450,  status: 'selling' },
+  { id: 2, name: '베이커리온 역삼점',  lat: 37.5008, lng: 127.0368, category: '빵',    productCount: 5, pickupTime: '17:00~21:00', distance: 280,  status: 'selling' },
+  { id: 3, name: '한솥도시락 강남역점', lat: 37.4979, lng: 127.0276, category: '도시락', productCount: 0, pickupTime: '16:00~19:00', distance: 720,  status: 'soldout' },
+  { id: 4, name: '파리바게뜨 선릉점',  lat: 37.5044, lng: 127.0491, category: '빵',    productCount: 2, pickupTime: '19:00~21:30', distance: 950,  status: 'closing' },
+  { id: 5, name: '자연반찬 강남점',   lat: 37.5021, lng: 127.0312, category: '반찬',   productCount: 4, pickupTime: '17:00~20:00', distance: 600,  status: 'selling' },
+  { id: 6, name: '카페블랑 강남점',   lat: 37.4993, lng: 127.0348, category: '음료',   productCount: 6, pickupTime: '15:00~18:00', distance: 330,  status: 'selling' },
+];
+
+// ─── 광고 배너 목 데이터 ──────────────────────────────────
+// TODO: 관리자 웹에서 등록한 배너를 API로 불러오도록 교체
+// 예: const bannerAds = await fetch('/api/banners').then(r => r.json());
+// 각 배너 객체 구조:
+//   { id, imageUrl, linkType ('category'|'product'|'url'), linkValue, title, description }
+// imageUrl이 없을 경우 아래 fallback(그라디언트 + 이모지) 방식을 사용
+export const mockBannerAds = [
+  {
+    id: 1,
+    imageUrl: null, // 관리자가 등록한 이미지 URL (없으면 fallback 표시)
+    fallback: { bg: 'linear-gradient(135deg, #1A8F5A 0%, #22A06B 100%)', emoji: '🌱' },
+    title: '오늘 버려질 수 있는\n음식을 구해보세요',
+    description: '최대 70% 할인 · 근처 매장에서 바로 픽업',
+    btnLabel: '근처 상품 보기',
+    linkType: 'category',
+    linkValue: '전체',
+  },
+  {
+    id: 2,
+    imageUrl: null,
+    fallback: { bg: 'linear-gradient(135deg, #E65C00 0%, #FF8A3D 100%)', emoji: '🥐' },
+    title: '베이커리 할인\n오늘만 특가!',
+    description: '오늘 구운 빵 최대 60% 할인 · 지금 바로 예약',
+    btnLabel: '빵 상품 보기',
+    linkType: 'category',
+    linkValue: '빵',
+  },
+  {
+    id: 3,
+    imageUrl: null,
+    fallback: { bg: 'linear-gradient(135deg, #2962FF 0%, #5B8DEF 100%)', emoji: '🍱' },
+    title: '오늘의 도시락\n픽업 특가',
+    description: '점심·저녁 도시락 최대 50% · 매장 직접 픽업',
+    btnLabel: '도시락 보기',
+    linkType: 'category',
+    linkValue: '도시락',
+  },
+  {
+    id: 4,
+    imageUrl: null,
+    fallback: { bg: 'linear-gradient(135deg, #6D28D9 0%, #A78BFA 100%)', emoji: '🍰' },
+    title: '디저트 마감 할인\n지금 놓치면 아쉬워요',
+    description: '케이크·음료 등 오늘 마감 특가 상품 모아보기',
+    btnLabel: '디저트 보기',
+    linkType: 'category',
+    linkValue: '디저트',
+  },
 ];
 
 export const mockOrders = [
@@ -220,5 +281,17 @@ export const mockOrders = [
     totalPrice: 4900,
     status: 'pending',
     orderedAt: new Date().toISOString(),
+  },
+  {
+    id: 'FP-1018',
+    productId: 2,
+    productName: '통밀 크로와상 2개입',
+    store: '베이커리온 역삼점',
+    storeAddress: '서울 강남구 역삼로 45',
+    pickupTime: '어제 17:00~21:00',
+    quantity: 2,
+    totalPrice: 3800,
+    status: 'completed',
+    orderedAt: new Date(Date.now() - 86400000).toISOString(),
   },
 ];

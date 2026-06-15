@@ -2,43 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { Bell, ChevronDown, Search, SlidersHorizontal, X, ArrowLeft, ChevronRight, Grid2X2, Wheat, Box, Leaf, Utensils, Coffee, Clock, Cookie } from 'lucide-react';
 import { colors } from '../theme';
 import ProductCard from '../components/ProductCard';
-import { stores } from '../mockData';
+import { stores, mockBannerAds } from '../mockData';
+import StoreListScreen from './StoreListScreen';
 
 // ─── 광고 배너 데이터 ──────────────────────────────────────
-const ADS = [
-  {
-    id: 1,
-    bg: `linear-gradient(135deg, #1A8F5A 0%, ${colors.primaryGreen} 100%)`,
-    emoji: '🌱',
-    title: '오늘 버려질 수 있는\n음식을 구해보세요',
-    sub: '최대 70% 할인 · 근처 매장에서 바로 픽업',
-    btnLabel: '근처 상품 보기',
-  },
-  {
-    id: 2,
-    bg: 'linear-gradient(135deg, #E65C00 0%, #FF8A3D 100%)',
-    emoji: '🥐',
-    title: '베이커리 할인\n오늘만 특가!',
-    sub: '오늘 구운 빵 최대 60% 할인 · 지금 바로 예약',
-    btnLabel: '빵 상품 보기',
-  },
-  {
-    id: 3,
-    bg: 'linear-gradient(135deg, #2962FF 0%, #5B8DEF 100%)',
-    emoji: '🍱',
-    title: '오늘의 도시락\n픽업 특가',
-    sub: '점심·저녁 도시락 최대 50% · 매장 직접 픽업',
-    btnLabel: '도시락 보기',
-  },
-  {
-    id: 4,
-    bg: 'linear-gradient(135deg, #6D28D9 0%, #A78BFA 100%)',
-    emoji: '🍰',
-    title: '디저트 마감 할인\n지금 놓치면 아쉬워요',
-    sub: '케이크·음료 등 오늘 마감 특가 상품 모아보기',
-    btnLabel: '디저트 보기',
-  },
-];
+// TODO: 실제 서비스에서는 아래 mockBannerAds 대신 API 호출로 교체
+// 예: const [ads, setAds] = useState([]);
+//     useEffect(() => { fetch('/api/banners').then(r=>r.json()).then(setAds); }, []);
+const ADS = mockBannerAds;
 
 // ─── 카테고리 정의 ─────────────────────────────────────────
 const CATEGORIES = [
@@ -64,7 +35,7 @@ const FILTER_LABELS = { distance: '거리', price: '가격', discount: '할인�
 const SORT_OPTIONS = ['가까운 순', '마감 임박 순', '할인율 높은 순', '낮은 가격 순'];
 
 // ─── 자동 슬라이드 배너 ───────────────────────────────────
-function AdBanner({ onSearchMode }) {
+function AdBanner({ onBannerPress }) {
   const [displayIdx, setDisplayIdx] = useState(0);
   const [phase, setPhase] = useState('idle');
   const pendingRef = useRef(null);
@@ -103,20 +74,33 @@ function AdBanner({ onSearchMode }) {
 
   return (
     <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 20 }}>
-      <div style={{ background: ad.bg, borderRadius: 20, padding: '24px 20px', color: colors.white, position: 'relative', overflow: 'hidden', transform, transition }}>
-        <div style={{ position: 'absolute', right: -20, top: -20, width: 120, height: 120, background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }} />
-        <div style={{ position: 'absolute', right: 30, bottom: -30, width: 80, height: 80, background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }} />
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-          <div style={{ flex: 1 }}>
-            <p style={{ margin: '0 0 4px', fontSize: 18, fontWeight: 800, lineHeight: 1.35, whiteSpace: 'pre-line' }}>{ad.title}</p>
-            <p style={{ margin: '8px 0 16px', fontSize: 13, opacity: 0.88 }}>{ad.sub}</p>
-            <button onClick={() => onSearchMode && onSearchMode()} style={{ background: 'rgba(255,255,255,0.22)', color: colors.white, border: '1.5px solid rgba(255,255,255,0.5)', borderRadius: 10, padding: '9px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
-              {ad.btnLabel}
-            </button>
+      {/* imageUrl이 있으면 이미지, 없으면 fallback 그라디언트 */}
+      {ad.imageUrl ? (
+        <div onClick={() => onBannerPress && onBannerPress(ad)} style={{ borderRadius: 20, overflow: 'hidden', transform, transition, height: 160, position: 'relative', cursor: 'pointer' }}>
+          <img src={ad.imageUrl} alt={ad.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.32)', display: 'flex', alignItems: 'flex-end', padding: '16px 20px' }}>
+            <div>
+              <p style={{ margin: '0 0 4px', fontSize: 17, fontWeight: 800, color: '#fff', whiteSpace: 'pre-line' }}>{ad.title}</p>
+              <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>{ad.description}</p>
+            </div>
           </div>
-          <span style={{ fontSize: 52, lineHeight: 1, marginLeft: 8, flexShrink: 0 }}>{ad.emoji}</span>
         </div>
-      </div>
+      ) : (
+        <div style={{ background: ad.fallback.bg, borderRadius: 20, padding: '24px 20px', color: colors.white, position: 'relative', overflow: 'hidden', transform, transition }}>
+          <div style={{ position: 'absolute', right: -20, top: -20, width: 120, height: 120, background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }} />
+          <div style={{ position: 'absolute', right: 30, bottom: -30, width: 80, height: 80, background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }} />
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+            <div style={{ flex: 1 }}>
+              <p style={{ margin: '0 0 4px', fontSize: 18, fontWeight: 800, lineHeight: 1.35, whiteSpace: 'pre-line' }}>{ad.title}</p>
+              <p style={{ margin: '8px 0 16px', fontSize: 13, opacity: 0.88 }}>{ad.description}</p>
+              <button onClick={() => onBannerPress && onBannerPress(ad)} style={{ background: 'rgba(255,255,255,0.22)', color: colors.white, border: '1.5px solid rgba(255,255,255,0.5)', borderRadius: 10, padding: '9px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+                {ad.btnLabel}
+              </button>
+            </div>
+            <span style={{ fontSize: 52, lineHeight: 1, marginLeft: 8, flexShrink: 0 }}>{ad.fallback.emoji}</span>
+          </div>
+        </div>
+      )}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 10 }}>
         {ADS.map((_, i) => (
           <button key={i} onClick={() => goTo(i)} style={{ width: i === displayIdx ? 20 : 6, height: 6, borderRadius: 3, background: i === displayIdx ? colors.primaryGreen : '#D0D3D7', border: 'none', cursor: 'pointer', padding: 0, transition: 'all 0.3s' }} />
@@ -315,14 +299,47 @@ function CategoryBrowseScreen({ category, productList, onBack, onProductPress, o
 }
 
 // ─── 메인 컴포넌트 ────────────────────────────────────────
-export default function HomeScreen({ onProductPress, onStorePress, onLike, productList }) {
+export default function HomeScreen({ onProductPress, onStorePress, onLike, productList, onNotificationPress }) {
   const [searchMode, setSearchMode] = useState(false);
   const [query, setQuery] = useState('');
   const [activeFilters, setActiveFilters] = useState({});
   const [sortBy, setSortBy] = useState('가까운 순');
   const [showSort, setShowSort] = useState(false);
   const [showFilterSection, setShowFilterSection] = useState(false);
-  const [browseCategory, setBrowseCategory] = useState(null); // { key, emoji, label, bg, color }
+  const [browseCategory, setBrowseCategory] = useState(null);
+  const [showStoreList, setShowStoreList] = useState(false);
+  const [recentSearches, setRecentSearches] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('fp_recent_searches') || '[]'); }
+    catch { return []; }
+  });
+
+  function saveSearch(kw) {
+    const trimmed = kw.trim();
+    if (!trimmed) return;
+    setRecentSearches(prev => {
+      const next = [trimmed, ...prev.filter(s => s !== trimmed)].slice(0, 10);
+      localStorage.setItem('fp_recent_searches', JSON.stringify(next));
+      return next;
+    });
+  }
+
+  function removeSearch(kw) {
+    setRecentSearches(prev => {
+      const next = prev.filter(s => s !== kw);
+      localStorage.setItem('fp_recent_searches', JSON.stringify(next));
+      return next;
+    });
+  }
+
+  function clearAllSearches() {
+    setRecentSearches([]);
+    localStorage.removeItem('fp_recent_searches');
+  }
+
+  function applyKeyword(kw) {
+    setQuery(kw);
+    saveSearch(kw);
+  }
 
   function toggleFilter(group, val) {
     setActiveFilters(prev => {
@@ -333,6 +350,17 @@ export default function HomeScreen({ onProductPress, onStorePress, onLike, produ
   }
   function activeCount() { return Object.values(activeFilters).flat().length; }
   function exitSearch() { setSearchMode(false); setQuery(''); setActiveFilters({}); setSortBy('가까운 순'); setShowFilterSection(false); }
+
+  // ── 전체 매장 보기 화면 ──
+  if (showStoreList) {
+    return (
+      <StoreListScreen
+        stores={stores}
+        onBack={() => setShowStoreList(false)}
+        onStorePress={onStorePress}
+      />
+    );
+  }
 
   // ── 카테고리 브라우즈 화면 ──
   if (browseCategory) {
@@ -372,7 +400,7 @@ export default function HomeScreen({ onProductPress, onStorePress, onLike, produ
               <span style={{ fontSize: 15, fontWeight: 700, color: colors.charcoalBlack }}>강남구 역삼동</span>
               <ChevronDown size={16} color={colors.charcoalBlack} />
             </button>
-            <button style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', padding: 4 }}>
+            <button onClick={onNotificationPress} style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', padding: 4 }}>
               <Bell size={22} color={colors.charcoalBlack} />
               <span style={{ position: 'absolute', top: 2, right: 2, width: 8, height: 8, background: colors.alertRed, borderRadius: '50%', border: `2px solid ${colors.white}` }} />
             </button>
@@ -392,6 +420,7 @@ export default function HomeScreen({ onProductPress, onStorePress, onLike, produ
               value={query}
               onFocus={() => setSearchMode(true)}
               onChange={e => setQuery(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && query.trim()) saveSearch(query); }}
               placeholder="음식 또는 가게 검색"
               style={{ flex: 1, background: 'none', border: 'none', outline: 'none', fontSize: 14, color: colors.charcoalBlack }}
             />
@@ -423,8 +452,8 @@ export default function HomeScreen({ onProductPress, onStorePress, onLike, produ
           </div>
         )}
 
-        {/* 검색모드: 결과 수 + 정렬 */}
-        {searchMode && (
+        {/* 검색모드: 결과 수 + 정렬 (쿼리가 있을 때만) */}
+        {searchMode && query.trim() && (
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 16px 10px', borderTop: `1px solid ${colors.softGray}` }}>
             <span style={{ fontSize: 13, color: colors.mediumGray }}>
               상품 <strong style={{ color: colors.charcoalBlack }}>{sortedProducts.length}</strong> · 가게 <strong style={{ color: colors.charcoalBlack }}>{searchedStores.length}</strong>
@@ -447,43 +476,89 @@ export default function HomeScreen({ onProductPress, onStorePress, onLike, produ
         {!searchMode && <div style={{ height: 12 }} />}
       </div>
 
-      {/* ── 검색 결과 ── */}
+      {/* ── 검색 결과 / 추천 검색어 ── */}
       {searchMode ? (
-        <div style={{ padding: '12px 16px 100px' }}>
-          {searchedStores.length > 0 && (
-            <div style={{ marginBottom: 24 }}>
-              <p style={{ margin: '0 0 12px', fontSize: 16, fontWeight: 800, color: colors.charcoalBlack }}>
-                🏪 가게 <span style={{ fontSize: 14, color: colors.mediumGray, fontWeight: 400 }}>{searchedStores.length}개</span>
-              </p>
-              {searchedStores.map(s => (
-                <div key={s.id} onClick={() => onStorePress && onStorePress(s.id)} style={{ background: colors.white, borderRadius: 14, padding: '14px 16px', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-                  <div style={{ width: 48, height: 48, borderRadius: 12, background: colors.freshMint, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>
-                    {s.name.includes('샐러드') ? '🥗' : s.name.includes('베이커리') || s.name.includes('바게뜨') ? '🥐' : s.name.includes('도시락') ? '🍱' : s.name.includes('반찬') ? '🥡' : s.name.includes('카페') ? '☕' : '🏪'}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ margin: 0, fontSize: 15, fontWeight: 700, color: colors.charcoalBlack }}>{s.name}</p>
-                    <p style={{ margin: '3px 0 0', fontSize: 12, color: colors.mediumGray }}>{s.distance >= 1000 ? `${(s.distance/1000).toFixed(1)}km` : `${s.distance}m`} · 상품 {s.productCount}개 · 픽업 {s.pickupTime}</p>
-                  </div>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.status === 'selling' ? colors.primaryGreen : s.status === 'closing' ? colors.warmOrange : colors.mediumGray, flexShrink: 0 }} />
+        !query.trim() ? (
+          /* 쿼리 없음 → 최근 검색 + 추천 검색어 */
+          <div style={{ padding: '20px 16px 100px', background: colors.white, minHeight: '100%' }}>
+
+            {/* 최근 검색어 */}
+            {recentSearches.length > 0 && (
+              <div style={{ marginBottom: 28 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                  <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: colors.charcoalBlack }}>최근 검색어</p>
+                  <button onClick={clearAllSearches} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: colors.mediumGray, padding: 0 }}>전체 삭제</button>
                 </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                  {recentSearches.map(kw => (
+                    <div key={kw} style={{ display: 'flex', alignItems: 'center', background: colors.softGray, borderRadius: 20, padding: '7px 10px 7px 14px', gap: 6 }}>
+                      <button onClick={() => applyKeyword(kw)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontSize: 14, color: colors.charcoalBlack, fontWeight: 500 }}>
+                        {kw}
+                      </button>
+                      <button onClick={() => removeSearch(kw)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}>
+                        <X size={13} color={colors.mediumGray} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 추천 검색어 */}
+            <p style={{ margin: '0 0 12px', fontSize: 14, fontWeight: 700, color: colors.charcoalBlack }}>추천 검색어</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {['크루아상', '샐러드', '도시락', '아메리카노', '샌드위치', '반찬세트', '베이글', '마감임박'].map(kw => (
+                <button key={kw} onClick={() => applyKeyword(kw)} style={{
+                  background: colors.softGray,
+                  border: 'none', borderRadius: 20,
+                  padding: '8px 16px',
+                  fontSize: 14, color: colors.charcoalBlack,
+                  cursor: 'pointer', fontWeight: 500,
+                }}>
+                  <Search size={12} color={colors.mediumGray} style={{ marginRight: 5, verticalAlign: 'middle' }} />
+                  {kw}
+                </button>
               ))}
             </div>
-          )}
-          {sortedProducts.length > 0 && (
-            <div>
-              <p style={{ margin: '0 0 12px', fontSize: 16, fontWeight: 800, color: colors.charcoalBlack }}>
-                🍽 음식 <span style={{ fontSize: 14, color: colors.mediumGray, fontWeight: 400 }}>{sortedProducts.length}개</span>
-              </p>
-              {sortedProducts.map(p => <ProductCard key={p.id} product={p} onPress={onProductPress} onLike={onLike} onStorePress={onStorePress} />)}
-            </div>
-          )}
-          {sortedProducts.length === 0 && searchedStores.length === 0 && (
-            <div style={{ textAlign: 'center', paddingTop: 60 }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>😔</div>
-              <p style={{ fontSize: 15, color: colors.mediumGray }}>검색 결과가 없습니다</p>
-            </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          /* 쿼리 있음 → 검색 결과 */
+          <div style={{ padding: '12px 16px 100px' }}>
+            {searchedStores.length > 0 && (
+              <div style={{ marginBottom: 24 }}>
+                <p style={{ margin: '0 0 12px', fontSize: 16, fontWeight: 800, color: colors.charcoalBlack }}>
+                  🏪 가게 <span style={{ fontSize: 14, color: colors.mediumGray, fontWeight: 400 }}>{searchedStores.length}개</span>
+                </p>
+                {searchedStores.map(s => (
+                  <div key={s.id} onClick={() => onStorePress && onStorePress(s.id)} style={{ background: colors.white, borderRadius: 14, padding: '14px 16px', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: colors.freshMint, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>
+                      {s.name.includes('샐러드') ? '🥗' : s.name.includes('베이커리') || s.name.includes('바게뜨') ? '🥐' : s.name.includes('도시락') ? '🍱' : s.name.includes('반찬') ? '🥡' : s.name.includes('카페') ? '☕' : '🏪'}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <p style={{ margin: 0, fontSize: 15, fontWeight: 700, color: colors.charcoalBlack }}>{s.name}</p>
+                      <p style={{ margin: '3px 0 0', fontSize: 12, color: colors.mediumGray }}>{s.distance >= 1000 ? `${(s.distance/1000).toFixed(1)}km` : `${s.distance}m`} · 상품 {s.productCount}개 · 픽업 {s.pickupTime}</p>
+                    </div>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.status === 'selling' ? colors.primaryGreen : s.status === 'closing' ? colors.warmOrange : colors.mediumGray, flexShrink: 0 }} />
+                  </div>
+                ))}
+              </div>
+            )}
+            {sortedProducts.length > 0 && (
+              <div>
+                <p style={{ margin: '0 0 12px', fontSize: 16, fontWeight: 800, color: colors.charcoalBlack }}>
+                  🍽 음식 <span style={{ fontSize: 14, color: colors.mediumGray, fontWeight: 400 }}>{sortedProducts.length}개</span>
+                </p>
+                {sortedProducts.map(p => <ProductCard key={p.id} product={p} onPress={onProductPress} onLike={onLike} onStorePress={onStorePress} />)}
+              </div>
+            )}
+            {sortedProducts.length === 0 && searchedStores.length === 0 && (
+              <div style={{ textAlign: 'center', paddingTop: 60 }}>
+                <div style={{ fontSize: 48, marginBottom: 12 }}>😔</div>
+                <p style={{ fontSize: 15, color: colors.mediumGray }}>검색 결과가 없습니다</p>
+              </div>
+            )}
+          </div>
+        )
 
       ) : (
         /* ── 홈 본문 ── */
@@ -491,7 +566,12 @@ export default function HomeScreen({ onProductPress, onStorePress, onLike, produ
 
           {/* 광고 배너 (검색바와 간격 확대) */}
           <div style={{ padding: '20px 16px 0' }}>
-            <AdBanner onSearchMode={() => setSearchMode(true)} />
+            <AdBanner onBannerPress={ad => {
+              if (ad.linkType === 'category') {
+                const cat = CATEGORIES.find(c => c.key === ad.linkValue) || CATEGORIES[0];
+                setBrowseCategory(cat);
+              }
+            }} />
           </div>
 
           {/* 카테고리 아이콘 그리드 */}
@@ -506,7 +586,7 @@ export default function HomeScreen({ onProductPress, onStorePress, onLike, produ
                 <p style={{ margin: 0, fontSize: 17, fontWeight: 800, color: colors.charcoalBlack }}>🏪 내 주변 매장</p>
                 <p style={{ margin: '2px 0 0', fontSize: 13, color: colors.mediumGray }}>가까운 순으로 보기</p>
               </div>
-              <button style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 2, fontSize: 13, color: colors.primaryGreen, fontWeight: 600 }}>
+              <button onClick={() => setShowStoreList(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 2, fontSize: 13, color: colors.primaryGreen, fontWeight: 600 }}>
                 전체보기 <ChevronRight size={14} />
               </button>
             </div>
